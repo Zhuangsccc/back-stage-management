@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import _ from "lodash"
 export default {
   name: "DailyAffairs",
   data() {
@@ -97,6 +98,11 @@ export default {
       //弹出框文本长度
       formLabelWidth: "120px",
     };
+  },  
+  mounted(){
+    let arr = ['a', 'b', 'c', 'd']
+    let newArr = _.chunk(arr,2)
+    console.log(newArr);
   },
   methods: {
     //新增操作

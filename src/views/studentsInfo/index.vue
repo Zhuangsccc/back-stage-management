@@ -1,185 +1,93 @@
 <template>
-  <el-card>
-    <div >
-      <el-button type="primary" style="float: left; margin-right: 30px;">添加学生</el-button>
-      <FilterBar></FilterBar>
-    </div>
-    <div style="min-width: 1100px;">
-      <el-table :data="tableData" style="width: 100%;" >
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="学生姓名">
-                <span>{{ props.row.name }}</span>
-              </el-form-item>
-              <el-form-item label="辅导员">
-                <span>{{ props.row.shop }}</span>
-              </el-form-item>
-              <el-form-item label="学生ID">
-                <span>{{ props.row.id }}</span>
-              </el-form-item>
-              <el-form-item label="电话号码">
-                <span>{{ props.row.phone }}</span>
-              </el-form-item>
-              <el-form-item label="家庭地址">
-                <span>{{ props.row.address }}</span>
-              </el-form-item>
-              <el-form-item label="学院专业">
-                <span>{{ props.row.major }}</span>
-              </el-form-item>
-              <el-form-item label="学生宿舍">
-                <span>{{ props.row.hotel }}</span>
-              </el-form-item>
-            </el-form>
+  <div>
+    <FilterBar @getKeyWord="getKeyWord"></FilterBar>
+    <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
+      <el-button type="primary" @click="toAdd">新建</el-button>
+      <el-table class="el-table-style" :data="tableData.filter(data => !keyword || data.name.toLowerCase().includes(keyword.toLowerCase())
+  || data.gender.toLowerCase().includes(keyword.toLowerCase())
+  || data.major.toLowerCase().includes(keyword.toLowerCase()))" style="width: 100%">
+        <el-table-column label="Index" type="index" align="center" width="80"> </el-table-column>
+        <el-table-column label="Name" prop="name" align="center" width="200"> </el-table-column>
+        <el-table-column label="Gender" prop="gender" align="center" width="200"> </el-table-column>
+        <el-table-column label="Major" prop="major" align="center"> </el-table-column>
+        <el-table-column label="Class" prop="class" align="center"> </el-table-column>
+        <el-table-column label="Phone" prop="phone" align="center"> </el-table-column>
+        <el-table-column label="Assistant" prop="assistant" align="center">
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="{ row }">
+            <el-link type="primary" :underline="false" @click="toEdit(row)">编辑</el-link>
+            <el-link type="danger" :underline="false" @click="toDelete(row)" style="margin-left: 10px">删除</el-link>
           </template>
         </el-table-column>
-        <el-table-column label="学生ID" prop="id" > </el-table-column>
-        <el-table-column label="学生姓名" prop="name"> </el-table-column>
-        <el-table-column label="学院班级" prop="major"> </el-table-column>
-        <el-table-column label="辅导员" prop="shop" width="100px"> </el-table-column>
-        <el-table-column label="操作" width="200px">
-          <template slot-scope="{ row, index }">
-                  <el-link type="primary" :underline="false">编辑</el-link>
-                  <el-link
-                    type="danger"
-                    :underline="false"
-                    style="margin-left: 10px"
-                    >删除</el-link
-                  >
-                </template>
-           </el-table-column>
       </el-table>
-      <el-pagination
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="10"
-        layout=" prev, pager, next, jumper"
-        :total="400"
-        align="center">
-      </el-pagination>
-    </div>
-  </el-card>
+    </el-card>
+    <Pagination></Pagination>
+  </div>
 </template>
 
 <script>
+import { getStuList, deleteStuInfo } from "@/api/table"
+import Pagination from "@/components/Pagination"
 export default {
   data() {
     return {
-      tableData: [
-        {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东埭仔",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987123",
-          name: "张博凯",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "上海市普陀区真北路",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987125",
-          name: "庄思超",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "上海市普陀区真北路",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987126",
-          name: "王朝臻",
-          phone: "18558977471",
-          major: "土木学院土木工程",
-          address: "上海市普陀区真北路",
-          shop: "林欢 ",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东棣子",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东棣子",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东棣子",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东棣子",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东棣子",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-        {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东棣子",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        }, {
-          id: "12987122",
-          name: "王晓波",
-          phone: "18558977471",
-          major: "新工科学院数据科学与大数据技术",
-          address: "福建省泉州市惠安县东桥镇东棣子",
-          shop: "林欢",
-          shopId: "10333",
-          hotel:"凤达学生公寓D521"
-        },
-      ],
+      tableData: [],
+      keyword: ""
     };
   },
+  components: { Pagination },
   methods: {
-  }
+    //添加学生
+    toAdd() {
+      this.$router.push({
+        name: "EditInfo"
+      })
+    },
+    //编辑学生
+    toEdit(row) {
+      this.$router.push({
+        name: "EditInfo",
+        query: row
+      })
+    },
+    //删除操作
+    toDelete(row) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let result = await deleteStuInfo(row.id)
+        if (result.code == 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.initializeTable()
+        } else {
+          this.$message.error('删除失败');
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    //获得关键词
+    getKeyWord(e) {
+      this.keyword = e
+    },
+    //初始化表格
+    async initializeTable() {
+      let result = await getStuList()
+      this.tableData = result.data
+    }
+  },
+  async mounted() {
+    this.initializeTable()
+  },
 };
 </script>
 
@@ -187,13 +95,29 @@ export default {
 .demo-table-expand {
   font-size: 0;
 }
+
 .demo-table-expand label {
   width: 90px;
   color: #99a9bf;
 }
+
 .demo-table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+
+.el-table-style {
+  width: 100%;
+  height: 100%
+}
+
+.info-card {
+  margin: 0 5px;
+  height: 800px
+}
+
+.infinite-list-wrapper {
+  height: calc(100vh - 200px);
 }
 </style>

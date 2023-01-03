@@ -41,7 +41,14 @@ export const constantRoutes = [
         path:"studentsInfo",
         name:"StudentsInfo",
         component:()=> import ("@/views/studentsInfo"),
-        meta:{title:"学生信息管理",icon: "table"}
+        meta:{title:"学生信息",icon: "table"},
+      },
+      {
+        path:"editInfo",
+        name:"EditInfo",
+        component:()=>import ("@/views/studentsInfo/editInfo"),
+        meta:{title:"学生信息管理",icon: "table"},
+        hidden:true
       }
     ]
     // children: [
