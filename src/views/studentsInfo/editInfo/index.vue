@@ -146,7 +146,7 @@ export default {
               type: 'success'
             });
             setTimeout(()=>{
-              this.$router.push({name:"StudentsInfo"})
+              this.$router.push({name:"StuInfo"})
             },2000)
           } else {
             this.$message.error('添加失败');
@@ -158,7 +158,7 @@ export default {
       });
     },
     backToStu() {
-      this.$router.push({ name: "StudentsInfo" })
+      this.$router.push({ name: "StuInfo" })
     }
   },
   mounted(){

@@ -274,6 +274,7 @@ export default {
   right: 0;
   bottom: 0;
   display: flex;
+  min-width: 1300px;
 }
 .box-left {
   background-color: dodgerblue;
