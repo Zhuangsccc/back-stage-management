@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo,getUserInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    roles:[]
   }
 }
 
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROLES:(state,roles)=>{
+    state.roles = roles
   }
 }
 
@@ -45,6 +49,7 @@ const actions = {
     let res = await login({ username: username, password: password })
     if(res.code==200){
       commit('SET_TOKEN', res.token)
+      commit('SET_NAME', username)
       setToken(res.token)
     }
   },
@@ -68,7 +73,10 @@ const actions = {
       })
     })
   },
-
+  async getUserRoles({commit,state}){
+    let result = await getUserInfo(state.name)
+    commit("SET_ROLES",result.data.roles)
+  },
   // user logout
   logout({ commit, state }) {
         removeToken() // must remove  token  first

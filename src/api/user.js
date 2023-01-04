@@ -21,6 +21,15 @@ export function register(data){
     data
   })
 }
+export function getUserInfo(name){
+  return request({
+    url:"/vue3/userInfo",
+    method:"post",
+    data:{
+      username:name
+    }
+  })
+}
 // export function logout() {
 //   return request({
 //     url: '/vue-admin-template/user/logout',
