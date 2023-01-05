@@ -39,7 +39,7 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200px">
-            <template slot-scope="{ row, $index }">
+            <template slot-scope="{ row }">
               <el-link
                 type="primary"
                 size="mini"
