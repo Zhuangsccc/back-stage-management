@@ -1,10 +1,24 @@
 <template>
-  <div>财务信息管理</div>
+  <div>
+    <FilterBar @getKeyWord="getKeyWord"></FilterBar>
+  </div>
 </template>
 
 <script>
+import FilterBar from "@/components/FilterBar"
 export default {
-    name:"FinancialInformation"
+    name:"FinancialInformation",
+    components:{FilterBar},
+    data(){
+      return {
+        keyword:""
+      }
+    },
+    methods:{
+      getKeyWord(e){
+        this.keyword = e
+      }
+    }
 }
 </script>
 
