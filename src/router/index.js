@@ -22,10 +22,12 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    type:"目录",
+    meta:{title:"首页",icon:"dashboard"},
     children: [{
-      path: 'dashboard',
+      path: 'mydashboard',
       name: 'Dashboard',
+      type:"页面",
       component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]

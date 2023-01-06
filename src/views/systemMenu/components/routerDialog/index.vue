@@ -63,8 +63,9 @@
 
 <script>
 import icon from "@/icon/icon";
-import { addRoutes } from "@/api/menu"
-import {getItemByNameInTree} from "@/utils/routeSet"
+import { addRoutes,updateRoute } from "@/api/menu"
+import { getItemByNameInTree,getOuterMostNode } from "@/utils/routeSet"
+import { deepClone } from "@/utils";
 export default {
     props: {
         title: {
@@ -149,7 +150,8 @@ export default {
             ],
             typeSelect: false,
             dia: false,
-            changeNode:{}
+            changeNode: {},
+            choseNodePath:""
         }
     },
     mounted() {
@@ -169,10 +171,11 @@ export default {
         },
         handleNodeClick(val) {
             this.form.parentName = val.title;
+            this.choseNodePath = val.path
             this.$refs.selectTree.blur();
         },
         async addToRoutes() {
-            const { name, type, icon, state } = this.form
+            const { name, type, icon, state,path2,path} = this.form
             if (this.form.parentName == "顶级节点") {
                 let route = {
                     component: "Layout",
@@ -187,11 +190,40 @@ export default {
                 }
                 route = JSON.stringify(route)
                 let result = await addRoutes(route)
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     resolve(result)
                 })
-            }else{
-                
+            } else {
+                let outerMostNode = deepClone(getOuterMostNode(this.choseNodePath,this.tableData))
+                let outerMostNodes = []
+                outerMostNodes.push(outerMostNode)
+                let node = getItemByNameInTree(this.form.parentName,outerMostNodes)
+                let route = {
+                    component:type=="目录"?'catalogue':path,
+                    meta:{
+                        title:name,
+                        roles:["ROOT"],
+                        icon,
+                    },
+                    path:type=="外链"?path2:name,
+                    type,
+                    state
+                }
+                if(node.children){
+                    node.children.push(route)
+                }else{
+                    node.children=[
+                        route,
+                    ]
+                }
+                let data = {
+                    route:JSON.stringify(outerMostNode),
+                    id:outerMostNode.id
+                }
+                let result = await updateRoute(data)
+                return new Promise((resolve,reject)=>{
+                    resolve(result)
+                })
             }
         },
         //点击确认回调
@@ -204,10 +236,10 @@ export default {
                             type: "success",
                             message: "操作成功!",
                         });
+                        setTimeout(() => {
+                            this.$router.go(0)
+                        }, 1000)
                     }
-                    setTimeout(() => {
-                        this.$router.go(0)
-                    }, 2000)
                 } else {
                     ("error submit!!");
                     return false;
@@ -254,7 +286,7 @@ export default {
                 this.typeSelect = true
             } else {
                 this.typeSelect = false
-                this.changeNode = getItemByNameInTree(this.form.parentName,this.tableData)
+                this.changeNode = getItemByNameInTree(this.form.parentName, this.tableData)
             }
         }
     }

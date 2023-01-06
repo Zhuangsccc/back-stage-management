@@ -22,14 +22,15 @@
         </el-table-column>
         <el-table-column label="状态" width="120">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.state == '1' ? 'success' : 'danger'"><span v-if="scope.row.state == '1'">正常</span><span
-                v-else>禁用</span></el-tag>
+            <el-tag :type="scope.row.state == '1' ? 'success' : 'danger'"><span
+                v-if="scope.row.state == '1'">正常</span><span v-else>禁用</span></el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200px">
           <template slot-scope="{ row }">
             <el-link type="primary" size="mini" :disabled="row.ndelete">编辑</el-link>
-            <el-link type="danger" size="mini" style="margin-left: 10px" :disabled="row.ndelete">删除</el-link>
+            <el-link type="danger" size="mini" style="margin-left: 10px" @click="toDelete(row)"
+              :disabled="row.ndelete">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -40,10 +41,11 @@
 </template>
 
 <script>
-import { listRoutes } from "@/api/menu"
+import { listRoutes, updateRoute } from "@/api/menu"
 import FilterBar from "@/components/FilterBar"
 import routerDialog from "./components/routerDialog"
-import { filterType } from "@/utils/routeSet"
+import { filterType, getOuterMostNode, filterPath } from "@/utils/routeSet"
+import { deepClone } from "@/utils"
 export default {
   data() {
     return {
@@ -65,13 +67,45 @@ export default {
     changeDia(e) {
       this.dialogFormVisible = e
     },
-    async initTableData(){
+    async initTableData() {
       let result = await listRoutes()
       this.tableData = result.data
+    },
+    toDelete(row) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let changeNode = deepClone(getOuterMostNode(row.path, this.tableData))
+        let changeNodes = []
+        changeNodes.push(changeNode)
+        let route = filterPath(changeNodes, row.path)[0]
+        let data = {
+          route: JSON.stringify(route),
+          id: changeNode.id
+        }
+        let result = await updateRoute(data)
+        if (result.code == 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.initTableData()
+          setTimeout(()=>{
+            this.$router.go(0)
+          },1000)
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   },
   components: { FilterBar, routerDialog },
-   mounted() {
+  mounted() {
     this.initTableData()
   },
   watch: {

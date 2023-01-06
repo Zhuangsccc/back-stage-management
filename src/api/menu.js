@@ -14,3 +14,10 @@ export function addRoutes(route){
       }
   })
 }
+export function updateRoute(data){
+  return request({
+    url: '/vue3/updateRoute',
+      method: 'post',
+      data:data
+  })
+}
