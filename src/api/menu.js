@@ -21,3 +21,12 @@ export function updateRoute(data){
       data:data
   })
 }
+export function deleteRoute(id){
+  return request({
+    url: '/vue3/deleteRoute',
+      method: 'delete',
+      data:{
+        id,
+      }
+  })
+}

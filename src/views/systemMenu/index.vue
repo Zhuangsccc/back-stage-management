@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { listRoutes, updateRoute } from "@/api/menu"
+import { listRoutes, updateRoute,deleteRoute } from "@/api/menu"
 import FilterBar from "@/components/FilterBar"
 import routerDialog from "./components/routerDialog"
 import { filterType, getOuterMostNode, filterPath } from "@/utils/routeSet"
@@ -77,16 +77,17 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        let changeNode = deepClone(getOuterMostNode(row.path, this.tableData))
-        let changeNodes = []
-        changeNodes.push(changeNode)
-        let route = filterPath(changeNodes, row.path)[0]
-        let data = {
+        if(!row.id){
+          let changeNode = deepClone(getOuterMostNode(row.path, this.tableData))
+          let changeNodes = []
+          changeNodes.push(changeNode)
+          let route = filterPath(changeNodes, row.path)[0]
+          let data = {
           route: JSON.stringify(route),
           id: changeNode.id
         }
-        let result = await updateRoute(data)
-        if (result.code == 200) {
+          let result = await updateRoute(data)
+          if (result.code == 200) {
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -95,6 +96,19 @@ export default {
           setTimeout(()=>{
             this.$router.go(0)
           },1000)
+        }
+        }else{
+          let result = await deleteRoute(row.id)
+          if (result.code == 200) {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.initTableData()
+          setTimeout(()=>{
+            this.$router.go(0)
+          },1000)
+        }
         }
       }).catch(() => {
         this.$message({
