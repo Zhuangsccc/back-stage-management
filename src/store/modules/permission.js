@@ -21,7 +21,7 @@ function filterAsyncRoutes(routes, roles) {
     const res = [];
     routes.forEach(route => {
         const tmp = { ...route };
-        if (hasPermission(roles, tmp)&&tmp.state=="1") {
+        if (hasPermission(roles, tmp)&&tmp.state) {
             if (tmp.component == 'Layout') {
                 tmp.component = Layout;
             } else {

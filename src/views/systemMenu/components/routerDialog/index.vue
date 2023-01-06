@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" :show-close=false>
+    <el-dialog :title="title" :visible.sync="dia">
         <el-form :model="form" style="width: 90%" size="small" :rules="rules" ref="myForm">
             <el-form-item label="上级" :label-width="formLabelWidth" prop="parentName">
                 <el-select v-model="form.parentName" placeholder="请选择" ref="selectTree" style="width: 100%">
@@ -34,7 +34,7 @@
                     <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
-                <span v-show="this.typeSelect" style="color:#f85f73;">PS:该目录下含有其他页面或目录,无法改变类型</span>
+                <span v-show="this.typeSelect" style="color:#f85f73;">PS:顶级节点下第一层级需要是目录</span>
             </el-form-item>
             <el-form-item label="地址" :label-width="formLabelWidth" prop="path" v-if="form.type == '页面'">
                 <el-input placeholder="填写地址" v-model="form.path">
@@ -46,9 +46,6 @@
                     <template slot="prepend">链接地址</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="排序" :label-width="formLabelWidth">
-                <el-input-number v-model="form.sort" :min="0" label="描述文字"></el-input-number>
-            </el-form-item>
             <el-form-item label="状态" :label-width="formLabelWidth">
                 <el-switch v-model="form.state" active-text="正常" inactive-text="禁用">
                 </el-switch>
@@ -59,13 +56,15 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="changeDia">取 消</el-button>
-            <el-button @click="changeDia" type="primary">确 定</el-button>
+            <el-button @click="okHandler" type="primary">确 定</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
 import icon from "@/icon/icon";
+import { addRoutes } from "@/api/menu"
+import {getItemByNameInTree} from "@/utils/routeSet"
 export default {
     props: {
         title: {
@@ -77,6 +76,12 @@ export default {
             default: false
         },
         treeRoutes: {
+            type: Array,
+            default: () => {
+                return []
+            }
+        },
+        tableData: {
             type: Array,
             default: () => {
                 return []
@@ -95,8 +100,6 @@ export default {
                 icon: "",
                 //类型
                 type: "",
-                //排序
-                sort: 0,
                 //地址
                 path: "",
                 //说明
@@ -104,7 +107,25 @@ export default {
                 path2: "",
                 state: true
             },
-            rules: {},
+            rules: {
+                parentName: [
+                    { required: true, message: "请选择上级", trigger: "blur" },
+                ],
+                name: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
+                icon: [{ required: true, message: "选择图标", trigger: "change" }],
+                type: [{ required: true, message: "请选择类型", trigger: "blur" }],
+                path: [
+                    { required: true, message: "请输入链接或地址", trigger: "blur" },
+                ],
+                path2: [
+                    { require: true, message: "请输入链接地址", trigger: "blur" },
+                    {
+                        pattern: /^(https?:|mailto:|tel:)/,
+                        message: "请输入符合规则的链接地址,仅支持http网址",
+                        trigger: "change",
+                    },
+                ],
+            },
             formLabelWidth: "120px",
             defaultProps: {
                 children: "children",
@@ -127,6 +148,8 @@ export default {
                 },
             ],
             typeSelect: false,
+            dia: false,
+            changeNode:{}
         }
     },
     mounted() {
@@ -148,9 +171,52 @@ export default {
             this.form.parentName = val.title;
             this.$refs.selectTree.blur();
         },
+        async addToRoutes() {
+            const { name, type, icon, state } = this.form
+            if (this.form.parentName == "顶级节点") {
+                let route = {
+                    component: "Layout",
+                    meta: {
+                        title: name,
+                        roles: ["ROOT"],
+                        icon,
+                    },
+                    path: '/' + name,
+                    type,
+                    state,
+                }
+                route = JSON.stringify(route)
+                let result = await addRoutes(route)
+                return new Promise((resolve, reject) => {
+                    resolve(result)
+                })
+            }else{
+                
+            }
+        },
+        //点击确认回调
+        okHandler() {
+            this.$refs.myForm.validate(async (success) => {
+                if (success) {
+                    const { code } = await this.addToRoutes();
+                    if (code == 200) {
+                        this.$message({
+                            type: "success",
+                            message: "操作成功!",
+                        });
+                    }
+                    setTimeout(() => {
+                        this.$router.go(0)
+                    }, 2000)
+                } else {
+                    ("error submit!!");
+                    return false;
+                }
+            });
+        },
     },
     watch: {
-        dialogFormVisible() {
+        dialogFormVisible(newValue) {
             if (this.title == "新增路由") {
                 this.form = {
                     //父亲节点名称
@@ -170,6 +236,25 @@ export default {
                     path2: "",
                     state: true
                 }
+                //移除校验
+                this.$nextTick(() => {
+                    this.$refs.myForm.clearValidate()
+                })
+            }
+            this.dia = newValue
+        },
+        dia(newValue) {
+            if (!newValue) {
+                this.$emit("changeDia", false)
+            }
+        },
+        "form.parentName"(newValue) {
+            if (newValue == "顶级节点") {
+                this.form.type = "目录"
+                this.typeSelect = true
+            } else {
+                this.typeSelect = false
+                this.changeNode = getItemByNameInTree(this.form.parentName,this.tableData)
             }
         }
     }

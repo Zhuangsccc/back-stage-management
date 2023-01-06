@@ -5,3 +5,12 @@ export function listRoutes() {
       method: 'get'
     });
   }
+export function addRoutes(route){
+  return request({
+    url: '/vue3/addRoutes',
+      method: 'post',
+      data:{
+        route,
+      }
+  })
+}
