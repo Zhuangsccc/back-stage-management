@@ -31,7 +31,7 @@ function getItemByPathInTree(path, tree) {
     ele.path === path ? (res = ele) : "";
     if (res) break;
     if (ele.children) {
-      res = getItemByNameInTree(path, ele.children);
+      res = getItemByPathInTree(path, ele.children);
     }
   }
   return res;

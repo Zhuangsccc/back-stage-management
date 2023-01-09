@@ -44,7 +44,7 @@
 import { listRoutes, updateRoute,deleteRoute } from "@/api/menu"
 import FilterBar from "@/components/FilterBar"
 import routerDialog from "./components/routerDialog"
-import { filterType, getOuterMostNode, filterPath } from "@/utils/routeSet"
+import { filterType, getOuterMostNode, filterPath,getItemByPathInTree } from "@/utils/routeSet"
 import { deepClone } from "@/utils"
 export default {
   data() {
@@ -110,7 +110,8 @@ export default {
           },1000)
         }
         }
-      }).catch(() => {
+      })
+      .catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'

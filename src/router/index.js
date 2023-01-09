@@ -24,6 +24,7 @@ export const constantRoutes = [
     component: Layout,
     type:"目录",
     meta:{title:"首页",icon:"dashboard"},
+    redirect: 'mydashboard',
     children: [{
       path: 'mydashboard',
       name: 'Dashboard',
