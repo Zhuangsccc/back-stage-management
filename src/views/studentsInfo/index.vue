@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div   >
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="toAdd">新建</el-button>
@@ -22,7 +22,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <Pagination></Pagination>
+    <Pagination ></Pagination>
   </div>
 </template>
 
@@ -33,7 +33,8 @@ export default {
   data() {
     return {
       tableData: [],
-      keyword: ""
+      keyword: "",
+      show:false
     };
   },
   components: { Pagination },
@@ -91,11 +92,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped >
+
 .demo-table-expand {
   font-size: 0;
 }
-
 .demo-table-expand label {
   width: 90px;
   color: #99a9bf;

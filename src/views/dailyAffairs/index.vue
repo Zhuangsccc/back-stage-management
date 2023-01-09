@@ -1,22 +1,20 @@
 <template>
-  <div>
+  <div >
     <FilterBar></FilterBar>
-    
   </div>
 </template>
 
 <script>
-import _ from "lodash"
 import FilterBar from "@/components/FilterBar"
 export default {
   name: "DailyAffairs",
+  components:{FilterBar},
   data() {
     return {
-
+      show:false
     };
   },  
   mounted(){
-    
   },
   methods: {
   
@@ -24,6 +22,5 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
 </style>

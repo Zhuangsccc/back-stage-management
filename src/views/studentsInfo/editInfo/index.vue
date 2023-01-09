@@ -171,7 +171,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .user-box-header {
   height: 25px;
   line-height: 25px;

@@ -1,5 +1,5 @@
 <template>
-  <el-card class="filter-box">
+  <el-card class="filter-box" >
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="关键词">
         <el-input v-model="formInline.keyWord" placeholder="请输入关键词"></el-input>
@@ -38,6 +38,6 @@ export default {
 .filter-box {
   min-width: 1100px;
   height: 80px;
-  margin: 10px 0;
+  margin: 10px 5px;
 }
 </style>

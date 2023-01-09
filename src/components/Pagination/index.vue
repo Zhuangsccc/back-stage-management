@@ -34,6 +34,7 @@ export default {
   bottom: 0;
   width: 100%;
   margin: 10px 5px;
-  height:50px
+  height:50px;
+  
 }
 </style>

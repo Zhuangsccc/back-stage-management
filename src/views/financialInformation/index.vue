@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
   </div>
 </template>
@@ -22,6 +22,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>

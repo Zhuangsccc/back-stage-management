@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  >
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="table-box">
       <el-button type="primary" @click="addNewRoute">新建</el-button>
@@ -146,6 +146,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.table-box{
+  margin: 0 5px;
+}
 </style>

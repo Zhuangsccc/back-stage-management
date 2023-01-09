@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div >
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
-    <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
+    <el-card class="info-card infinite-list-wrapper" style="overflow: auto;margin: 0 5px;">
       <el-table class="el-table-style"
         :data="tableData.filter(data => !keyword || data.name.toLowerCase().includes(keyword.toLowerCase()))"
         style="width: 100%">
@@ -51,5 +51,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

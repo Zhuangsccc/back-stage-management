@@ -63,8 +63,8 @@
 
 <script>
 import icon from "@/icon/icon";
-import { addRoutes, updateRoute } from "@/api/menu"
-import { getItemByNameInTree, getOuterMostNode,getItemByPathInTree } from "@/utils/routeSet"
+import { addRoutes, updateRoute,deleteRoute } from "@/api/menu"
+import { getItemByNameInTree, getOuterMostNode, getItemByPathInTree, filterPath } from "@/utils/routeSet"
 import { deepClone } from "@/utils";
 export default {
     props: {
@@ -193,6 +193,7 @@ export default {
                     path: '/' + name,
                     type,
                     state,
+                    children:this.row.children?this.row.children:[]
                 }
                 route = JSON.stringify(route)
                 let result = await addRoutes(route)
@@ -213,7 +214,8 @@ export default {
                     },
                     path: type == "外链" ? path2 : name,
                     type,
-                    state
+                    state,
+                    children:this.row.children?this.row.children:[]
                 }
                 if (node.children) {
                     node.children.push(route)
@@ -232,11 +234,41 @@ export default {
                 })
             }
         },
+        async editRoutes() {
+            if (!this.row.id) {
+                let changeNode = deepClone(getOuterMostNode(this.row.path, this.tableData))
+                let changeNodes = []
+                changeNodes.push(changeNode)
+                let route = filterPath(changeNodes, this.row.path)[0]
+                let data = {
+                    route: JSON.stringify(route),
+                    id: changeNode.id
+                }
+                let result = await updateRoute(data)
+                if (result.code == 200) {
+                    let result2 = this.addToRoutes()
+                    console.log(result2);
+                    return new Promise((resolve, reject) => {
+                        resolve(result2)
+                    })
+                }
+            }
+            else {
+                let result = await deleteRoute(this.row.id)
+                if (result.code == 200) {
+                    let result2 = this.addToRoutes()
+                    console.log(result2);
+                    return new Promise((resolve, reject) => {
+                        resolve(result2)
+                    })
+                }
+            }
+        },
         //点击确认回调
         okHandler() {
             this.$refs.myForm.validate(async (success) => {
                 if (success) {
-                    const { code } = await this.addToRoutes();
+                    const { code } = this.title == "新增路由" ? await this.addToRoutes() : await this.editRoutes();
                     if (code == 200) {
                         this.$message({
                             type: "success",
@@ -297,21 +329,21 @@ export default {
         },
         title: {
             handler() {
-                if (this.title == "编辑路由"&&this.row.path){
-                    if(this.row.Ppath){
-                        let parentNode = getItemByPathInTree(this.row.Ppath,this.tableData)
-                        this.form.parentName = parentNode.title
-                    }else{
+                if (this.title == "编辑路由" && this.row.path) {
+                    if (this.row.Ppath) {
+                        this.editParentNode = getItemByPathInTree(this.row.Ppath, this.tableData)
+                        this.form.parentName = this.editParentNode.title
+                    } else {
                         this.form.parentName = "顶级节点"
                     }
-                    this.form.name=this.row.meta.title
-                    this.form.icon=this.row.meta.icon
+                    this.form.name = this.row.meta.title
+                    this.form.icon = this.row.meta.icon
                     this.form.state = this.row.state
-                    this.form.type=this.row.type
-                    if(this.row.component&&this.row.type=="页面"){
+                    this.form.type = this.row.type
+                    if (this.row.component && this.row.type == "页面") {
                         this.form.path = this.row.component
                     }
-                    if(this.row.type=="外链"){
+                    if (this.row.type == "外链") {
                         this.form.path2 = this.row.path
                     }
                 }
@@ -321,6 +353,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
