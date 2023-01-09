@@ -63,8 +63,8 @@
 
 <script>
 import icon from "@/icon/icon";
-import { addRoutes,updateRoute } from "@/api/menu"
-import { getItemByNameInTree,getOuterMostNode } from "@/utils/routeSet"
+import { addRoutes, updateRoute } from "@/api/menu"
+import { getItemByNameInTree, getOuterMostNode,getItemByPathInTree } from "@/utils/routeSet"
 import { deepClone } from "@/utils";
 export default {
     props: {
@@ -86,6 +86,12 @@ export default {
             type: Array,
             default: () => {
                 return []
+            }
+        },
+        row: {
+            type: Object,
+            default: () => {
+                return {}
             }
         }
     },
@@ -151,7 +157,7 @@ export default {
             typeSelect: false,
             dia: false,
             changeNode: {},
-            choseNodePath:""
+            choseNodePath: ""
         }
     },
     mounted() {
@@ -175,7 +181,7 @@ export default {
             this.$refs.selectTree.blur();
         },
         async addToRoutes() {
-            const { name, type, icon, state,path2,path} = this.form
+            const { name, type, icon, state, path2, path } = this.form
             if (this.form.parentName == "顶级节点") {
                 let route = {
                     component: "Layout",
@@ -194,34 +200,34 @@ export default {
                     resolve(result)
                 })
             } else {
-                let outerMostNode = deepClone(getOuterMostNode(this.choseNodePath,this.tableData))
+                let outerMostNode = deepClone(getOuterMostNode(this.choseNodePath, this.tableData))
                 let outerMostNodes = []
                 outerMostNodes.push(outerMostNode)
-                let node = getItemByNameInTree(this.form.parentName,outerMostNodes)
+                let node = getItemByNameInTree(this.form.parentName, outerMostNodes)
                 let route = {
-                    component:type=="目录"?'catalogue':path,
-                    meta:{
-                        title:name,
-                        roles:["ROOT"],
+                    component: type == "目录" ? 'catalogue' : path,
+                    meta: {
+                        title: name,
+                        roles: ["ROOT"],
                         icon,
                     },
-                    path:type=="外链"?path2:name,
+                    path: type == "外链" ? path2 : name,
                     type,
                     state
                 }
-                if(node.children){
+                if (node.children) {
                     node.children.push(route)
-                }else{
-                    node.children=[
+                } else {
+                    node.children = [
                         route,
                     ]
                 }
                 let data = {
-                    route:JSON.stringify(outerMostNode),
-                    id:outerMostNode.id
+                    route: JSON.stringify(outerMostNode),
+                    id: outerMostNode.id
                 }
                 let result = await updateRoute(data)
-                return new Promise((resolve,reject)=>{
+                return new Promise((resolve, reject) => {
                     resolve(result)
                 })
             }
@@ -287,6 +293,28 @@ export default {
             } else {
                 this.typeSelect = false
                 this.changeNode = getItemByNameInTree(this.form.parentName, this.tableData)
+            }
+        },
+        title: {
+            handler() {
+                if (this.title == "编辑路由"&&this.row.path){
+                    if(this.row.Ppath){
+                        let parentNode = getItemByPathInTree(this.row.Ppath,this.tableData)
+                        this.form.parentName = parentNode.title
+                    }else{
+                        this.form.parentName = "顶级节点"
+                    }
+                    this.form.name=this.row.meta.title
+                    this.form.icon=this.row.meta.icon
+                    this.form.state = this.row.state
+                    this.form.type=this.row.type
+                    if(this.row.component&&this.row.type=="页面"){
+                        this.form.path = this.row.component
+                    }
+                    if(this.row.type=="外链"){
+                        this.form.path2 = this.row.path
+                    }
+                }
             }
         }
     }
