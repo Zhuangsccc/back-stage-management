@@ -63,8 +63,8 @@
 
 <script>
 import icon from "@/icon/icon";
-import { addRoutes, updateRoute, deleteRoute } from "@/api/menu"
-import { getItemByNameInTree, getOuterMostNode, getItemByPathInTree, filterPath,uniqueObj } from "@/utils/routeSet"
+import { addRoutes, updateRoute, deleteRoute, setIdRoute } from "@/api/menu"
+import { getItemByNameInTree, getOuterMostNode, getItemByPathInTree, filterPath, uniqueObj } from "@/utils/routeSet"
 import { deepClone } from "@/utils";
 export default {
     props: {
@@ -158,9 +158,9 @@ export default {
             dia: false,
             changeNode: {},
             choseNodePath: "",
-            fisrstName:"",
-            nodechange:false,
-            tempRoute:{}
+            fisrstName: "",
+            nodechange: false,
+            tempRoute: {}
         }
     },
     mounted() {
@@ -179,7 +179,7 @@ export default {
             this.$emit("changeDia", false)
         },
         handleNodeClick(val) {
-            this.nodechange=true
+            this.nodechange = true
             this.form.parentName = val.title;
             this.choseNodePath = val.path
             this.$refs.selectTree.blur();
@@ -197,13 +197,20 @@ export default {
                     path: '/' + name,
                     type,
                     state,
-                    children:this.row.children?this.row.children:[]
+                    children: this.row.children ? this.row.children : []
                 }
                 route = JSON.stringify(route)
-                let result = await addRoutes(route)
-                return new Promise((resolve) => {
-                    resolve(result)
-                })
+                if (this.row.id) {
+                    let result = await setIdRoute(route, this.row.id)
+                    return new Promise((resolve) => {
+                        resolve(result)
+                    })
+                } else {
+                    let result = await addRoutes(route)
+                    return new Promise((resolve) => {
+                        resolve(result)
+                    })
+                }
             } else {
                 let outerMostNode = deepClone(getOuterMostNode(this.choseNodePath, this.tableData))
                 let outerMostNodes = []
@@ -219,7 +226,7 @@ export default {
                     path: type == "外链" ? path2 : name,
                     type,
                     state,
-                    children:this.row.children?this.row.children:[]
+                    children: this.row.children ? this.row.children : []
                 }
                 if (node.children) {
                     node.children.push(route)
@@ -250,7 +257,7 @@ export default {
                     id: changeNode.id
                 }
                 await updateRoute(data)
-                
+
                 let result2 = await this.addToRoutes()
                 return new Promise((resolve) => {
                     resolve(result2)
@@ -328,8 +335,8 @@ export default {
                 this.typeSelect = false
                 this.changeNode = getItemByNameInTree(this.form.parentName, this.tableData)
             }
-            if(newValue==this.fisrstName){
-                this.nodechange=false
+            if (newValue == this.fisrstName) {
+                this.nodechange = false
             }
         },
         title: {
@@ -358,7 +365,7 @@ export default {
                 }
             }
         },
-        
+
     }
 }
 </script>
