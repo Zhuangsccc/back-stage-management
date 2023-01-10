@@ -1,4 +1,4 @@
-import { login, logout, getInfo,getUserInfo } from '@/api/user'
+import { login, logout, getInfo,getUserInfo,updateRoles } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -91,6 +91,19 @@ const actions = {
       commit('RESET_STATE')
       resolve()
     })
+  },
+  async updateTheRoles(context,form){
+     let result = await updateRoles(form.name,form.roles)
+     if(result.code ==200){
+      context.dispatch("getUserRoles")
+     }
+  },
+  filterRole(context,roles){
+     let tempRoles = context.state.roles
+     tempRoles = tempRoles.filter((item)=>{
+      return item!==roles
+     })
+     context.commit("SET_ROLES",tempRoles)
   }
 }
 

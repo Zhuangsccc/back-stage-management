@@ -66,6 +66,7 @@ import icon from "@/icon/icon";
 import { addRoutes, updateRoute, deleteRoute, setIdRoute } from "@/api/menu"
 import { getItemByNameInTree, getOuterMostNode, getItemByPathInTree, filterPath, uniqueObj } from "@/utils/routeSet"
 import { deepClone } from "@/utils";
+import store from "@/store"
 export default {
     props: {
         title: {
@@ -200,6 +201,7 @@ export default {
                     children: this.row.children ? this.row.children : []
                 }
                 route = JSON.stringify(route)
+                this.myUpdate(name)
                 if (this.row.id) {
                     let result = await setIdRoute(route, this.row.id)
                     return new Promise((resolve) => {
@@ -240,6 +242,7 @@ export default {
                     route: JSON.stringify(outerMostNode),
                     id: outerMostNode.id
                 }
+                this.myUpdate(name)
                 let result = await updateRoute(data)
                 return new Promise((resolve) => {
                     resolve(result)
@@ -247,6 +250,7 @@ export default {
             }
         },
         async editRoutes() {
+            store.dispatch("user/filterRole",this.row.meta.title)
             if (!this.row.id) {
                 let changeNode = deepClone(getOuterMostNode(this.row.path, this.tableData))
                 let changeNodes = []
@@ -257,7 +261,6 @@ export default {
                     id: changeNode.id
                 }
                 await updateRoute(data)
-
                 let result2 = await this.addToRoutes()
                 return new Promise((resolve) => {
                     resolve(result2)
@@ -293,6 +296,15 @@ export default {
                 }
             });
         },
+        myUpdate(role){
+            let roles = store.getters.roles
+            roles.push(role)
+            const form = {
+                    name:store.getters.name,
+                    roles:roles.join(",")
+                }
+            store.dispatch("user/updateTheRoles",form)
+        }
     },
     watch: {
         dialogFormVisible(newValue) {

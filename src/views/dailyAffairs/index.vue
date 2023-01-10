@@ -1,6 +1,7 @@
 <template>
   <div >
     <FilterBar></FilterBar>
+    <el-button type="" @click="test"></el-button>
   </div>
 </template>
 
@@ -17,7 +18,13 @@ export default {
   mounted(){
   },
   methods: {
-  
+    test(){
+      const data = {
+        name:"admin",
+        roles:"ROOT,日常事务,日常事务管理"
+      }
+      this.$store.dispatch("user/updateTheRoles",data)
+    }
   },
 };
 </script>

@@ -43,3 +43,13 @@ export function setUser(data){
     data:data
   })
 }
+export function updateRoles(name,roles){
+  return request({
+    url:"vue3/updateRoles",
+    method:"post",
+    data:{
+      name,
+      roles
+    }
+  })
+}
