@@ -5,60 +5,24 @@
     </div>
     <div class="box-right">
       <div class="inside-box" v-if="!isRegister">
-        <div
-          style="display: flex; justify-content: center; align-items: center"
-        >
+        <div style="display: flex; justify-content: center; align-items: center">
           <svg-icon icon-class="在线教育" class="svg" />
           <header><i class="iconfont">学生管理系统</i></header>
         </div>
-        <el-form
-          ref="loginForm"
-          :model="loginForm"
-          :rules="loginRules"
-          style="margin-top: 20px"
-        >
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" style="margin-top: 20px">
           <el-form-item label="">
-            <el-input
-              ref="username"
-              v-model="loginForm.username"
-              placeholder="Username"
-              name="username"
-              type="text"
-              tabindex="1"
-              auto-complete="on"
-              prefix-icon="el-icon-user"
-            />
+            <el-input ref="username" v-model="loginForm.username" placeholder="Username" name="username" type="text"
+              tabindex="1" auto-complete="on" prefix-icon="el-icon-user" />
           </el-form-item>
           <el-form-item prop="password">
-            <el-input
-              prefix-icon="el-icon-lock"
-              :key="passwordType"
-              ref="password"
-              v-model="loginForm.password"
-              :type="passwordType"
-              placeholder="Password"
-              name="password"
-              tabindex="2"
-              auto-complete="on"
-              @keyup.enter.native="handleLogin"
-              @focus="showIcon = 1"
-              @blur="showIcon = 0"
-              ><i
-                v-show="showIcon"
-                slot="suffix"
-                class="el-icon-view"
-                @click="showPwd"
-              ></i
-            ></el-input>
+            <el-input prefix-icon="el-icon-lock" :key="passwordType" ref="password" v-model="loginForm.password"
+              :type="passwordType" placeholder="Password" name="password" tabindex="2" auto-complete="on"
+              @keyup.enter.native="handleLogin" @focus="showIcon = 1" @blur="showIcon = 0"><i v-show="showIcon"
+                slot="suffix" class="el-icon-view" @click="showPwd"></i></el-input>
             <!-- el-icon-view -->
           </el-form-item>
-          <el-button
-            :loading="loading"
-            type="primary"
-            style="width: 100%"
-            @click.native.prevent="handleLogin"
-            >登录</el-button
-          >
+          <el-button :loading="loading" type="primary" style="width: 100%"
+            @click.native.prevent="handleLogin">登录</el-button>
           <div style="width: 100%; display: flex; justify-content: center">
             <el-link @click="toRegister">还没有账号？快去注册一个</el-link>
           </div>
@@ -66,71 +30,31 @@
       </div>
       <div class="register-box" v-if="isRegister">
         <div class="register-box-header">
-          <div class="register-box-header-left" @click="backToLogin"><el-link><i class="el-icon-back"></i><span>返回登录</span></el-link></div>
+          <div class="register-box-header-left" @click="backToLogin"><el-link><i
+                class="el-icon-back"></i><span>返回登录</span></el-link></div>
           <svg-icon icon-class="在线教育" class="svg" />
           <header><i class="iconfont">注册</i></header>
         </div>
-        <el-form
-          ref="registerForm"
-          :model="registerForm"
-          :rules="loginRules"
-          style="margin-top: 20px"
-        >
+        <el-form ref="registerForm" :model="registerForm" :rules="loginRules" style="margin-top: 20px">
           <el-form-item>
-            <el-input
-              ref="username"
-              v-model="registerForm.username"
-              placeholder="请输入用户名"
-              name="username"
-              type="text"
-              tabindex="1"
-              auto-complete="on"
-              prefix-icon="el-icon-user"
-            />
+            <el-input ref="username" v-model="registerForm.username" placeholder="请输入用户名" name="username" type="text"
+              tabindex="1" auto-complete="on" prefix-icon="el-icon-user" />
           </el-form-item>
           <el-form-item prop="password">
-            <el-input
-              prefix-icon="el-icon-lock"
-              :key="passwordType"
-              ref="password"
-              v-model="registerForm.password"
-              :type="passwordType"
-              placeholder="请输入密码"
-              name="password"
-              tabindex="2"
-              auto-complete="on"
-              @keyup.enter.native="handleLogin"
-              @focus="showIcon = 1"
-              @blur="showIcon = 0"
-            ></el-input>
+            <el-input prefix-icon="el-icon-lock" :key="passwordType" ref="password" v-model="registerForm.password"
+              :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="on"
+              @keyup.enter.native="handleLogin" @focus="showIcon = 1" @blur="showIcon = 0"></el-input>
             <!-- el-icon-view -->
           </el-form-item>
           <el-form-item style="margin-bottom: 5px">
-            <el-input
-              prefix-icon="el-icon-lock"
-              :key="passwordType"
-              v-model="secondPassword"
-              :type="passwordType"
-              placeholder="请输入密码"
-              name="password"
-              tabindex="2"
-              auto-complete="on"
-              @keyup.enter.native="handleLogin"
-              @focus="showIcon = 1"
-              @blur="showIcon = 0"
-            ></el-input>
-            <span v-show="!isPass" class="register-tag" style="color: #c00000"
-              >两次输入的密码不一致</span
-            >
+            <el-input prefix-icon="el-icon-lock" :key="passwordType" v-model="secondPassword" :type="passwordType"
+              placeholder="请输入密码" name="password" tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin"
+              @focus="showIcon = 1" @blur="showIcon = 0"></el-input>
+            <span v-show="!isPass" class="register-tag" style="color: #c00000">两次输入的密码不一致</span>
             <!-- el-icon-view -->
           </el-form-item>
-          <el-button
-            :loading="loading"
-            type="primary"
-            style="width: 100%"
-            @click.native.prevent="handleRegister"
-            >注册</el-button
-          >
+          <el-button :loading="loading" type="primary" style="width: 100%"
+            @click.native.prevent="handleRegister">注册</el-button>
         </el-form>
       </div>
     </div>
@@ -139,7 +63,7 @@
 
 <script>
 import { validUsername } from "@/utils/validate";
-import { register } from "@/api/user";
+import { register, setUser } from "@/api/user";
 export default {
   name: "StudentPerformance",
   data() {
@@ -240,12 +164,19 @@ export default {
             this.loading = true;
             let result = await register(this.registerForm);
             if (result.code == 200) {
-              this.$message({
-                message: "注册成功",
-                type: "success",
-              });
-              this.loading = false;
-              this.isRegister = false;
+              let data = {
+                name: this.registerForm.username,
+                roles: ""
+              }
+              let result2 = await setUser(data)
+              if (result2.code == 200) {
+                this.$message({
+                  message: "注册成功",
+                  type: "success",
+                });
+                this.loading = false;
+                this.isRegister = false;
+              }
             }
             this.loading = false;
           }
@@ -259,8 +190,8 @@ export default {
         password: "",
       };
     },
-    backToLogin(){
-      this.isRegister=false
+    backToLogin() {
+      this.isRegister = false
     }
   },
 };
@@ -276,6 +207,7 @@ export default {
   display: flex;
   min-width: 1300px;
 }
+
 .box-left {
   background-color: dodgerblue;
   width: 55%;
@@ -284,6 +216,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .box-right {
   width: 45%;
   display: flex;
@@ -291,11 +224,13 @@ export default {
   align-items: center;
   border: #06a7fd solid 3px;
 }
+
 .inside-box {
   padding-top: 80px;
   width: 500px;
   height: 500px;
 }
+
 .svg-container {
   padding: 6px 5px 6px 15px;
   color: #889aa4;
@@ -307,12 +242,11 @@ export default {
 @font-face {
   font-family: "仓耳渔阳体 W01";
   font-weight: 400;
-  src: url("//at.alicdn.com/wf/webfont/OwzqFAbuXJtW/1GlofK69wVDo4DvMnr2F4.woff2")
-      format("woff2"),
-    url("//at.alicdn.com/wf/webfont/OwzqFAbuXJtW/UcEZK3vp8TsDLhnGTNUe4.woff")
-      format("woff");
+  src: url("//at.alicdn.com/wf/webfont/OwzqFAbuXJtW/1GlofK69wVDo4DvMnr2F4.woff2") format("woff2"),
+    url("//at.alicdn.com/wf/webfont/OwzqFAbuXJtW/UcEZK3vp8TsDLhnGTNUe4.woff") format("woff");
   font-display: swap;
 }
+
 .iconfont {
   font-family: "仓耳渔阳体 W01" !important;
   font-style: normal;
@@ -321,10 +255,12 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   font-size: 2.5rem;
 }
+
 .svg {
   height: 50px;
   width: 50px;
 }
+
 .register-box {
   padding-top: 80px;
   width: 500px;
@@ -334,11 +270,13 @@ export default {
 .register-tag {
   height: 10px;
 }
-.register-box-header{
+
+.register-box-header {
   display: flex;
-  
+
 }
-.register-box-header-left{
+
+.register-box-header-left {
   margin-top: 20px;
   width: 180px;
 }

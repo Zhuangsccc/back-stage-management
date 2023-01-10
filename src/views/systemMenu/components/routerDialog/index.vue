@@ -191,7 +191,7 @@ export default {
                     component: "Layout",
                     meta: {
                         title: name,
-                        roles: ["ROOT"],
+                        roles: [name],
                         icon,
                     },
                     path: '/' + name,
@@ -220,7 +220,7 @@ export default {
                     component: type == "目录" ? 'catalogue' : path,
                     meta: {
                         title: name,
-                        roles: ["ROOT"],
+                        roles: [name],
                         icon,
                     },
                     path: type == "外链" ? path2 : name,

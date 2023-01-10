@@ -36,3 +36,10 @@ export function getUserInfo(name){
 //     method: 'post'
 //   })
 // }
+export function setUser(data){
+  return request({
+    url:"/api/setUser",
+    method:"post",
+    data:data
+  })
+}
