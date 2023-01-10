@@ -63,8 +63,8 @@
 
 <script>
 import icon from "@/icon/icon";
-import { addRoutes, updateRoute,deleteRoute } from "@/api/menu"
-import { getItemByNameInTree, getOuterMostNode, getItemByPathInTree, filterPath } from "@/utils/routeSet"
+import { addRoutes, updateRoute, deleteRoute } from "@/api/menu"
+import { getItemByNameInTree, getOuterMostNode, getItemByPathInTree, filterPath,uniqueObj } from "@/utils/routeSet"
 import { deepClone } from "@/utils";
 export default {
     props: {
@@ -157,7 +157,10 @@ export default {
             typeSelect: false,
             dia: false,
             changeNode: {},
-            choseNodePath: ""
+            choseNodePath: "",
+            fisrstName:"",
+            nodechange:false,
+            tempRoute:{}
         }
     },
     mounted() {
@@ -176,6 +179,7 @@ export default {
             this.$emit("changeDia", false)
         },
         handleNodeClick(val) {
+            this.nodechange=true
             this.form.parentName = val.title;
             this.choseNodePath = val.path
             this.$refs.selectTree.blur();
@@ -224,12 +228,13 @@ export default {
                         route,
                     ]
                 }
+                uniqueObj(outerMostNode)
                 let data = {
                     route: JSON.stringify(outerMostNode),
                     id: outerMostNode.id
                 }
                 let result = await updateRoute(data)
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     resolve(result)
                 })
             }
@@ -244,20 +249,17 @@ export default {
                     route: JSON.stringify(route),
                     id: changeNode.id
                 }
-                let result = await updateRoute(data)
-                if (result.code == 200) {
-                    let result2 = this.addToRoutes()
-                    console.log(result2);
-                    return new Promise((resolve, reject) => {
-                        resolve(result2)
-                    })
-                }
+                await updateRoute(data)
+                
+                let result2 = await this.addToRoutes()
+                return new Promise((resolve) => {
+                    resolve(result2)
+                })
             }
             else {
                 let result = await deleteRoute(this.row.id)
                 if (result.code == 200) {
-                    let result2 = this.addToRoutes()
-                    console.log(result2);
+                    let result2 = await this.addToRoutes()
                     return new Promise((resolve, reject) => {
                         resolve(result2)
                     })
@@ -326,6 +328,9 @@ export default {
                 this.typeSelect = false
                 this.changeNode = getItemByNameInTree(this.form.parentName, this.tableData)
             }
+            if(newValue==this.fisrstName){
+                this.nodechange=false
+            }
         },
         title: {
             handler() {
@@ -333,6 +338,7 @@ export default {
                     if (this.row.Ppath) {
                         this.editParentNode = getItemByPathInTree(this.row.Ppath, this.tableData)
                         this.form.parentName = this.editParentNode.title
+                        this.fisrstName = this.editParentNode.title
                     } else {
                         this.form.parentName = "顶级节点"
                     }
@@ -340,6 +346,9 @@ export default {
                     this.form.icon = this.row.meta.icon
                     this.form.state = this.row.state
                     this.form.type = this.row.type
+                    if (this.row.Ppath) {
+                        this.choseNodePath = this.row.Ppath
+                    }
                     if (this.row.component && this.row.type == "页面") {
                         this.form.path = this.row.component
                     }
@@ -348,7 +357,8 @@ export default {
                     }
                 }
             }
-        }
+        },
+        
     }
 }
 </script>

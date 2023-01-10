@@ -47,7 +47,7 @@
 import { listRoutes, updateRoute, deleteRoute } from "@/api/menu"
 import FilterBar from "@/components/FilterBar"
 import routerDialog from "./components/routerDialog"
-import { filterType, getOuterMostNode, filterPath } from "@/utils/routeSet"
+import { filterType, getOuterMostNode, filterPath,uniqueObj} from "@/utils/routeSet"
 import { deepClone } from "@/utils"
 export default {
   data() {
@@ -131,8 +131,9 @@ export default {
     }
   },
   components: { FilterBar, routerDialog },
-  mounted() {
-    this.initTableData()
+  async mounted() {
+    await this.initTableData()
+    console.log(this.tableData);
   },
   watch: {
     tableData: {

@@ -97,3 +97,64 @@ Modern browsers and Internet Explorer 10+.
 [MIT](https://github.com/PanJiaChen/vue-admin-template/blob/master/LICENSE) license.
 
 Copyright (c) 2017-present PanJiaChen
+{
+    "component": "Layout",
+    "meta": {
+        "title": "测试中文",
+        "roles": [
+            "ROOT"
+        ],
+        "icon": "el-icon-user"
+    },
+    "path": "/测试中文",
+    "type": "目录",
+    "state": true,
+    "id": 20,
+    "title": "测试中文",
+    "children": [
+        {
+            "component": "test",
+            "meta": {
+                "title": "测试中文页面",
+                "roles": [
+                    "ROOT"
+                ],
+                "icon": "el-icon-more-outline"
+            },
+            "path": "测试中文页面",
+            "type": "页面",
+            "state": true,
+            "Ppath": "/测试中文",
+            "title": "测试中文页面"
+        },
+        {
+            "component": "",
+            "meta": {
+                "title": "测试外链接",
+                "roles": [
+                    "ROOT"
+                ],
+                "icon": "el-icon-top"
+            },
+            "path": "https://www.zsc.world",
+            "type": "外链",
+            "state": true,
+            "Ppath": "/测试中文",
+            "title": "测试外链接"
+        },
+        {
+            "component": "test",
+            "meta": {
+                "title": "测试中文页面",
+                "roles": [
+                    "ROOT"
+                ],
+                "icon": "el-icon-more-outline"
+            },
+            "path": "测试中文页面",
+            "type": "页面",
+            "state": true,
+            "children": []
+        }
+    ]
+}

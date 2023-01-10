@@ -22,7 +22,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <Pagination ></Pagination>
+    <Pagination v-show="show" ></Pagination>
   </div>
 </template>
 
@@ -88,6 +88,9 @@ export default {
   },
   async mounted() {
     this.initializeTable()
+    setTimeout(()=>{
+      this.show=true
+    },400)
   },
 };
 </script>

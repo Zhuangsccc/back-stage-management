@@ -16,7 +16,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <Pagination></Pagination>
+    <Pagination v-show="show"></Pagination>
   </div>
 </template>
 
@@ -30,7 +30,8 @@ export default {
   data() {
     return {
       keyword: "",
-      tableData: []
+      tableData: [],
+      show:false
     }
   },
   watch: {
@@ -46,9 +47,19 @@ export default {
   },
   mounted() {
     this.initializeTable()
+    setTimeout(()=>{
+      this.show=true
+    },400)
   }
 };
 </script>
 
 <style scoped>
+.info-card {
+  margin: 0 5px;
+  height: 800px
+}
+.infinite-list-wrapper {
+  height: calc(100vh - 200px);
+}
 </style>

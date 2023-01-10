@@ -58,3 +58,31 @@ export function filterPath(tree, path) {
       return item;
     });
 }
+export function uniqueObj(obj){
+  if(obj.children){
+    let includesArr = []
+    let temp = []
+    obj.children.forEach(item => {
+      if(!includesArr.includes(item.component)){
+        temp.push(item)
+        includesArr.push(item.component)
+        if(item.children){
+          uniqueObj(item)
+        }
+      }else{
+        let index = includesArr.indexOf(item.component)
+        temp[index] = item
+      }
+      if(item.children&&item.children.length==0){
+        delete item.children
+      }
+    });
+    obj.children = temp
+    if(obj.id){
+      if(obj.children.length==1){
+        obj.redirect ='/'+obj.children[0].component
+      }
+    }
+    return obj
+  }
+}
