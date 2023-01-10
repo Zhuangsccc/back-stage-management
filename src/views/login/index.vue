@@ -145,7 +145,7 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
+              this.$router.push({ path:"/" });
               this.loading = false;
             })
             .catch(() => {
@@ -166,7 +166,8 @@ export default {
             if (result.code == 200) {
               let data = {
                 name: this.registerForm.username,
-                roles: ""
+                roles: "",
+                time:new Date().getTime()
               }
               let result2 = await setUser(data)
               if (result2.code == 200) {

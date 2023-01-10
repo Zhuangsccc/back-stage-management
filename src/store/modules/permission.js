@@ -43,13 +43,17 @@ function filterAsyncRoutes(routes, roles) {
 };
 const state = {
     routes: [],
-    addRoutes: []
+    addRoutes: [],
+    allRoutes:[]
 }
 
 const mutations = {
     setRoutes(state, newRoutes) {
         state.addRoutes = newRoutes
         state.routes = constantRoutes.concat(newRoutes)
+    },
+    setAllRoutes(state,newRoutes){
+        state.allRoutes = newRoutes
     }
 }
 
@@ -58,6 +62,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             listRoutes()
                 .then(response => {
+                    context.commit("setAllRoutes",response.data)
                     const asyncRoutes = response.data;
                     const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles);
                     context.commit("setRoutes",accessedRoutes);

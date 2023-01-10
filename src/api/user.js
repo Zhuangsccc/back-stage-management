@@ -49,7 +49,13 @@ export function updateRoles(name,roles){
     method:"post",
     data:{
       name,
-      roles
+      roles,
     }
+  })
+}
+export function getUserList(){
+  return request({
+    url:"api/getUserList",
+    method:"get"
   })
 }
