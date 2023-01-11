@@ -24,3 +24,20 @@ export function addScore(data){
         data,
     })
 }
+//更新成绩
+export function updateScore(data){
+    return request({
+        url:"/score/updateScore",
+        method:"post",
+        data,
+    })
+}
+export function deleteScore(id){
+    return request({
+        url:"/score/deleteScore",
+        method:"delete",
+        data:{
+            id
+        }
+    })
+}

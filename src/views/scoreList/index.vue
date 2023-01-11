@@ -14,21 +14,24 @@
                 </el-table-column>
                 <el-table-column prop="type" label="类型" align="center">
                 </el-table-column>
-                <el-table-column  label="状态" align="center">
+                <el-table-column label="状态" align="center">
                     <template slot-scope="{row}">
-                        <el-tag :type="row.score>=60?`success`:`danger`">{{ row.score>=60?"通过":"挂科" }}</el-tag>
+                        <el-tag :type="row.score >= 60 ? `success` : `danger`">{{
+                            row.score >= 60 ? "通过" : "挂科"
+                        }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="{row}">
-                        <el-button type="text" size="small">查看</el-button>
-                        <el-button type="text" size="small">编辑</el-button>
+                        <el-link type="primary" style="margin-right: 10px;" size="small"
+                            @click="editScore(row)">编辑</el-link>
+                        <el-link type="danger" size="small" @click="deleteS(row)">删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
         </el-card>
         <Pagination v-show="show"></Pagination>
-        <el-dialog title="新增成绩" :visible.sync="dialogFormVisible">
+        <el-dialog :title="title" :visible.sync="dialogFormVisible">
             <el-form :model="form" style="width: 90%;" :rules="rules" ref="myForm">
                 <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
                     <el-input v-model="form.name" autocomplete="off" :disabled="!canEnter"></el-input>
@@ -55,7 +58,7 @@
 </template>
 
 <script>
-import { getScore, getScoreByName,addScore } from "@/api/score"
+import { getScore, getScoreByName, addScore, updateScore, deleteScore } from "@/api/score"
 import FilterBar from "@/components/FilterBar"
 import Pagination from "@/components/Pagination"
 export default {
@@ -77,7 +80,8 @@ export default {
                 subject: [{ required: true, message: "请输入科目", trigger: "blur" }],
                 score: [{ required: true, message: "请输入成绩", trigger: "blur" }],
                 type: [{ required: true, message: "请选择类型", trigger: "blur" },],
-            }
+            },
+            title: ""
         }
     },
     components: { FilterBar, Pagination },
@@ -105,6 +109,7 @@ export default {
             }
         },
         addNewScore() {
+            this.title = "新增成绩"
             this.dialogFormVisible = true
             this.form = {
                 name: this.$route.query.name ? this.$route.query.name : "",
@@ -117,29 +122,69 @@ export default {
                 this.canEnter = false
             }
         },
-        okHandler(){
+        okHandler() {
             this.$refs.myForm.validate(async (valid) => {
-        if (valid) {
-          let result = await addScore(this.form)
-          if (result.code == 200) {
-            this.$message({
-              message: "新增成功",
-              type: 'success'
+                if (valid) {
+                    let result = this.form.id ? await updateScore(this.form) : await addScore(this.form)
+                    if (result.code == 200) {
+                        this.$message({
+                            message: this.form.id ? '修改成功' : "新增成功",
+                            type: 'success'
+                        });
+                        this.dialogFormVisible = false
+                        if (this.$route.query.name) {
+                            this.initTableDataByName(this.$route.query.name)
+                        } else {
+                            this.initTableData()
+                        }
+                    } else {
+                        this.$message.error('添加失败');
+                    }
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
             });
-           this.dialogFormVisible=false
-           if(this.$route.query.name){
-             this.initTableDataByName(this.$route.query.name)
-           }else{
-            this.initTableData()
-           }
-          } else {
-            this.$message.error('添加失败');
-          }
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+        },
+        editScore(row) {
+            this.title = "编辑成绩"
+            this.dialogFormVisible = true
+            this.form = {
+                name: row.name,
+                subject: row.subject,
+                score: row.score,
+                type: row.type,
+                id: row.id
+            }
+            this.canEnter = true
+            if (this.$route.query.name) {
+                this.canEnter = false
+            }
+        },
+        deleteS(row) {
+            this.$confirm('此操作将永久删除该成绩, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                let result = await deleteScore(row.id)
+                if (result.code == 200) {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    if (this.$route.query.name) {
+                            this.initTableDataByName(this.$route.query.name)
+                        } else {
+                            this.initTableData()
+                        }
+                }
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
         }
     }
 }
