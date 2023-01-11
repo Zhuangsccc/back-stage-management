@@ -17,12 +17,12 @@
       <el-main style="margin-top: 55px">
         <el-card class="info-card infinite-list-wrapper" style="overflow: auto" v-show="this.active == 0">
           <el-tree :data="data" show-checkbox node-key="title" :props="defaultProps" default-expand-all ref="tree"
-            @check-change="checkChange">
+            @check-change="checkChange" :default-checked-keys="moRen">
           </el-tree>
         </el-card>
         <el-card class="info-card infinite-list-wrapper" style="overflow: auto" v-show="this.active == 1">
           <el-radio-group v-model="name">
-            <el-radio-button v-for="(item, index) in userList" :key="index" :label="item"></el-radio-button>
+            <el-radio-button v-for="(item, index) in userList" :key="index" :label="item.name"></el-radio-button>
           </el-radio-group>
         </el-card>
       </el-main>
@@ -46,7 +46,8 @@ export default {
       choseNodes: [],
       roleStr: "",
       name: "",
-      userList: []
+      userList: [],
+      moRen:[]
     }
   },
   computed: {
@@ -102,6 +103,9 @@ export default {
     this.data = deepClone(store.getters.allRoutes)
     let result = await getUserList()
     this.userList = result.data
+    if(this.$route.query.roles){
+      this.moRen = this.$route.query.roles
+    }
   }
 }
 </script>

@@ -133,3 +133,7 @@ export function noRepeat(arr){
   var newArr = [...new Set(arr)]; //利用了Set结构不能接收重复数据的特点
   return newArr
 }
+const moment = require("moment")
+export function getMoment(time){
+  return moment(time).format('YYYY-MM-DD HH:mm:ss');
+}

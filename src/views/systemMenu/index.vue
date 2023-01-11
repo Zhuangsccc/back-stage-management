@@ -1,7 +1,7 @@
 <template>
   <div  >
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
-    <el-card class="table-box">
+    <el-card  class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="addNewRoute">新建</el-button>
       <el-table
         :data="tableData.filter(data => !keyword || data.meta.title.toLowerCase().includes(keyword.toLowerCase()))"
@@ -148,7 +148,12 @@ export default {
 </script>
 
 <style scoped>
-.table-box{
+.info-card {
   margin: 0 5px;
+  height: 800px
+}
+
+.infinite-list-wrapper {
+  height: calc(100vh - 160px);
 }
 </style>
