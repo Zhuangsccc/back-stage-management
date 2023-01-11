@@ -62,7 +62,6 @@ export default {
   },
   mounted() {
     // 首次加载时,需要调用一次
-    console.log(new Date().getTime());
     this.screenWidth = window.innerWidth;
 
     this.setSize();

@@ -16,7 +16,7 @@
           <template slot-scope="{row}">
             <el-link type="primary" size="mini" @click="setPermission(row)">权限设置</el-link>
             <el-link type="primary" size="mini" @click="resetPassword(row)" style="margin-left: 10px">重置密码</el-link>
-            <el-link type="danger" size="mini" style="margin-left: 10px" :disabled="row.name == `admin`">删除</el-link>
+            <el-link type="danger" size="mini" @click="deleteUser(row)" style="margin-left: 10px" :disabled="row.name == `admin`">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -40,7 +40,7 @@
 
 <script>
 import FilterBar from "@/components/FilterBar"
-import { getUserList,updatePassWord } from "@/api/user"
+import { getUserList,updatePassWord,deleteU } from "@/api/user"
 import { getMoment } from "@/utils"
 export default {
   components: { FilterBar },
@@ -113,11 +113,35 @@ export default {
           }else{
             this.$message.error(result.msg)
           }
+          this.dialogFormVisible = false
         } else {
           console.log('error submit!!');
           return false;
         }
       });
+    },
+    deleteUser(row){
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          let result = await deleteU(row.name)
+          if(result.code==200){
+            this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          this.initTableData()
+          }else{
+            this.$message.error(result.msg)
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
     }
   },
   filters: {

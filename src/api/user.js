@@ -70,3 +70,13 @@ export function updatePassWord(username,password){
     }
   })
 }
+//删除系统用户
+export function deleteU(username){
+  return request ({
+    url:"api/deleteUser",
+    method:"delete",
+    data:{
+      username,
+    }
+  })
+}
