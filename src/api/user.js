@@ -59,3 +59,14 @@ export function getUserList(){
     method:"get"
   })
 }
+//更新系统用户密码
+export function updatePassWord(username,password){
+  return request ({
+    url:"api/updateUserPW",
+    method:"post",
+    data:{
+      username,
+      password,
+    }
+  })
+}
