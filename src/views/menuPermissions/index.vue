@@ -105,6 +105,7 @@ export default {
     this.userList = result.data
     if(this.$route.query.roles){
       this.moRen = this.$route.query.roles
+      this.name = this.$route.query.name
     }
   }
 }
