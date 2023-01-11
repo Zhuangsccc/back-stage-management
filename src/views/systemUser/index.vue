@@ -1,9 +1,9 @@
 <template>
   <div>
-    <FilterBar></FilterBar>
+    <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="addUser">新增用户</el-button>
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData.filter(data => !keyword || data.name.toLowerCase().includes(keyword.toLowerCase()))" style="width: 100%">
         <el-table-column label="序号" type="index" width="100" align="center"></el-table-column>
         <el-table-column label="姓名" prop="name" width="250">
         </el-table-column>
@@ -111,7 +111,8 @@ export default {
         password2: [
           { required: true, message: "请重复密码", trigger: "blur", validator: validatePass2 },
         ],
-      }
+      },
+      keyword:""
     }
   },
   mounted() {
@@ -222,6 +223,9 @@ export default {
           return false;
         }
       });
+    },
+    getKeyWord(e){
+      this.keyword=e
     }
   },
   filters: {

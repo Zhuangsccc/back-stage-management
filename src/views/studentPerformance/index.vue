@@ -11,7 +11,7 @@
         <el-table-column label="Class" prop="class" align="center"> </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="{ row }">
-            <el-link type="primary" :underline="false">成绩管理</el-link>
+            <el-link type="primary" :underline="false" @click="goScore(row)">成绩管理</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -43,6 +43,14 @@ export default {
     async initializeTable() {
       let result = await getStuList()
       this.tableData = result.data
+    },
+    goScore(row){
+      this.$router.push({
+        path:"/student2/成绩列表",
+        query:{
+          name:row.name
+        }
+      })
     }
   },
   mounted() {

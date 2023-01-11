@@ -1,7 +1,7 @@
 <template>
-  <div  >
+  <div>
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
-    <el-card  class="info-card infinite-list-wrapper" style="overflow: auto">
+    <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="addNewRoute">新建</el-button>
       <el-table
         :data="tableData.filter(data => !keyword || data.meta.title.toLowerCase().includes(keyword.toLowerCase()))"
@@ -31,9 +31,10 @@
         </el-table-column>
         <el-table-column label="操作" width="200px">
           <template slot-scope="{ row }">
-            <el-link type="primary" size="mini" :disabled="row.ndelete" @click="toEdit(row)">编辑</el-link>
+            <el-link type="primary" size="mini" :disabled="noEditArr.includes(row.title)"
+              @click="toEdit(row)">编辑</el-link>
             <el-link type="danger" size="mini" style="margin-left: 10px" @click="toDelete(row)"
-              :disabled="row.ndelete">删除</el-link>
+              :disabled="noEditArr.includes(row.title)">删除</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -47,7 +48,7 @@
 import { listRoutes, updateRoute, deleteRoute } from "@/api/menu"
 import FilterBar from "@/components/FilterBar"
 import routerDialog from "./components/routerDialog"
-import { filterType, getOuterMostNode, filterPath} from "@/utils/routeSet"
+import { filterType, getOuterMostNode, filterPath } from "@/utils/routeSet"
 import { deepClone } from "@/utils"
 export default {
   data() {
@@ -57,7 +58,8 @@ export default {
       dialogFormVisible: false,
       title: "",
       treeRoutes: [],
-      row: {}
+      row: {},
+      noEditArr: ["系统设置", "系统菜单", "菜单权限", "系统用户"]
     }
   },
   methods: {
