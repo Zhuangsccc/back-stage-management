@@ -1,9 +1,13 @@
 import request from '@/utils/request'
 //获取成绩列表
-export function getScore(){
+export function getScore(pageIndex,pageSize){
     return request({
         url:"/score/getScore",
-        method:"get"
+        method:"get",
+        params:{
+            pageIndex,
+            pageSize
+          }
     })
 }
 //根据名称获取成绩列表

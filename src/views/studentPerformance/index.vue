@@ -16,7 +16,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <Pagination v-show="show"></Pagination>
+    <Pagination v-show="show" @getPageInfo="getPageInfo" :total="total"></Pagination>
   </div>
 </template>
 
@@ -31,7 +31,10 @@ export default {
     return {
       keyword: "",
       tableData: [],
-      show:false
+      show:false,
+      total:0,
+      pageIndex:1,
+      pageSize:10
     }
   },
   watch: {
@@ -41,8 +44,9 @@ export default {
       this.keyword = e
     },
     async initializeTable() {
-      let result = await getStuList()
-      this.tableData = result.data
+      let result = await getStuList(this.pageIndex,this.pageSize)
+      this.tableData = result.data.tableData
+      this.total=result.data.total
     },
     goScore(row){
       this.$router.push({
@@ -51,7 +55,12 @@ export default {
           name:row.name
         }
       })
-    }
+    },
+    async getPageInfo(pageIndex,pageSize){
+      this.pageIndex = pageIndex
+      this.pageSize = pageSize
+      this.initializeTable()
+  }
   },
   mounted() {
     this.initializeTable()

@@ -30,7 +30,7 @@
                 </el-table-column>
             </el-table>
         </el-card>
-        <Pagination v-show="show"></Pagination>
+        <Pagination v-show="show" @getPageInfo="getPageInfo" :total="total"></Pagination>
         <el-dialog :title="title" :visible.sync="dialogFormVisible">
             <el-form :model="form" style="width: 90%;" :rules="rules" ref="myForm">
                 <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
@@ -81,7 +81,10 @@ export default {
                 score: [{ required: true, message: "请输入成绩", trigger: "blur" }],
                 type: [{ required: true, message: "请选择类型", trigger: "blur" },],
             },
-            title: ""
+            title: "",
+            total: 0,
+            pageIndex: 1,
+            pageSize: 10
         }
     },
     components: { FilterBar, Pagination },
@@ -97,10 +100,16 @@ export default {
     },
     methods: {
         async initTableData() {
-            let result = await getScore()
+            let result = await getScore(this.pageIndex, this.pageSize)
             if (result.code == 200) {
-                this.tableData = result.data
+                this.tableData = result.data.tableData
+                this.total = result.data.total
             }
+        },
+        async getPageInfo(pageIndex, pageSize) {
+            this.pageIndex = pageIndex
+            this.pageSize = pageSize
+            this.initTableData()
         },
         async initTableDataByName(name) {
             let result = await getScoreByName(name)
@@ -174,10 +183,10 @@ export default {
                         message: '删除成功!'
                     });
                     if (this.$route.query.name) {
-                            this.initTableDataByName(this.$route.query.name)
-                        } else {
-                            this.initTableData()
-                        }
+                        this.initTableDataByName(this.$route.query.name)
+                    } else {
+                        this.initTableData()
+                    }
                 }
             }).catch(() => {
                 this.$message({
