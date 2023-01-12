@@ -1,11 +1,11 @@
 <template>
-  <div   >
+  <div>
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="toAdd">新建</el-button>
       <el-table class="el-table-style" :data="tableData.filter(data => !keyword || data.name.toLowerCase().includes(keyword.toLowerCase())
-  || data.gender.toLowerCase().includes(keyword.toLowerCase())
-  || data.major.toLowerCase().includes(keyword.toLowerCase()))" style="width: 100%">
+      || data.gender.toLowerCase().includes(keyword.toLowerCase())
+      || data.major.toLowerCase().includes(keyword.toLowerCase()))" style="width: 100%">
         <el-table-column label="Index" type="index" align="center" width="80"> </el-table-column>
         <el-table-column label="Name" prop="name" align="center" width="200"> </el-table-column>
         <el-table-column label="Gender" prop="gender" align="center" width="200"> </el-table-column>
@@ -34,10 +34,10 @@ export default {
     return {
       tableData: [],
       keyword: "",
-      show:false,
-      total:0,
-      pageIndex:1,
-      pageSize:10
+      show: false,
+      total: 0,
+      pageIndex: 1,
+      pageSize: 10
     };
   },
   components: { Pagination },
@@ -85,30 +85,34 @@ export default {
     },
     //初始化表格
     async initializeTable() {
-      let result = await getStuList(this.pageIndex,this.pageSize)
-      this.tableData = result.data.tableData
-      this.total=result.data.total
+      let result = await getStuList(this.pageIndex, this.pageSize)
+      if (result.code == 200) {
+        this.tableData = result.data.tableData
+        if (result.data.total) {
+          this.total = result.data.total
+        }
+      }
     },
-    async getPageInfo(pageIndex,pageSize){
+    async getPageInfo(pageIndex, pageSize) {
       this.pageIndex = pageIndex
       this.pageSize = pageSize
       this.initializeTable()
-  }
+    }
   },
   async mounted() {
     this.initializeTable()
-    setTimeout(()=>{
-      this.show=true
-    },400)
+    setTimeout(() => {
+      this.show = true
+    }, 400)
   },
 };
 </script>
 
 <style scoped >
-
 .demo-table-expand {
   font-size: 0;
 }
+
 .demo-table-expand label {
   width: 90px;
   color: #99a9bf;

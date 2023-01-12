@@ -165,7 +165,6 @@ export default {
     if(this.$route.query){
       this.tempForm = deepClone(this.$route.query)
       Object.assign(this.form,this.tempForm)
-      console.log(this.form);
     }
   }
 }

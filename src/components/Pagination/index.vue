@@ -38,9 +38,6 @@ export default {
       this.$emit("getPageInfo",pageIndex,this.pageSize)
     }
   },
-  mounted(){
-    this.getInfo()
-  }
 }
 </script>
 

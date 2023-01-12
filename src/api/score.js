@@ -11,12 +11,14 @@ export function getScore(pageIndex,pageSize){
     })
 }
 //根据名称获取成绩列表
-export function getScoreByName(name){
+export function getScoreByName(name,pageIndex,pageSize){
     return request({
         url:"/score/getScoreByName",
         method:"post",
         data:{
             name,
+            pageIndex,
+            pageSize
         }
     })
 }

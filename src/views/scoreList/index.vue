@@ -1,9 +1,10 @@
 <template>
     <div>
-        <FilterBar></FilterBar>
+        <FilterBar @getKeyWord="getKeyWord"></FilterBar>
         <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
             <el-button type="primary" @click="addNewScore">新增成绩</el-button>
-            <el-table :data="tableData" style="width: 100%">
+            <el-table :data="tableData.filter(data => !keyword || data.name.toLowerCase().includes(keyword.toLowerCase())
+  || data.subject.toLowerCase().includes(keyword.toLowerCase()))" style="width: 100%">
                 <el-table-column type="index" label="序号" align="center">
                 </el-table-column>
                 <el-table-column prop="name" label="姓名" align="center">
@@ -84,13 +85,14 @@ export default {
             title: "",
             total: 0,
             pageIndex: 1,
-            pageSize: 10
+            pageSize: 10,
+            keyword:""
         }
     },
     components: { FilterBar, Pagination },
     mounted() {
         if (this.$route.query.name) {
-            this.initTableDataByName(this.$route.query.name)
+            this.initTableDataByName(this.$route.query.name,this.pageIndex, this.pageSize)
         } else {
             this.initTableData()
         }
@@ -103,18 +105,25 @@ export default {
             let result = await getScore(this.pageIndex, this.pageSize)
             if (result.code == 200) {
                 this.tableData = result.data.tableData
-                this.total = result.data.total
+                if(result.data.total){
+                    this.total = result.data.total
+                }
             }
         },
         async getPageInfo(pageIndex, pageSize) {
             this.pageIndex = pageIndex
             this.pageSize = pageSize
+            if (this.$route.query.name) {
+            this.initTableDataByName(this.$route.query.name,this.pageIndex, this.pageSize)
+        } else {
             this.initTableData()
+        }
         },
-        async initTableDataByName(name) {
-            let result = await getScoreByName(name)
+        async initTableDataByName(name,pageIndex,pageSize) {
+            let result = await getScoreByName(name,pageIndex,pageSize)
             if (result.code == 200) {
-                this.tableData = result.data
+                this.tableData = result.data.tableData
+                this.total = result.data.total
             }
         },
         addNewScore() {
@@ -194,6 +203,9 @@ export default {
                     message: '已取消删除'
                 });
             });
+        },
+        getKeyWord(e){
+            this.keyword=e
         }
     }
 }

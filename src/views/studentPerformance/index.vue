@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto;margin: 0 5px;">
       <el-table class="el-table-style"
@@ -31,10 +31,10 @@ export default {
     return {
       keyword: "",
       tableData: [],
-      show:false,
-      total:0,
-      pageIndex:1,
-      pageSize:10
+      show: false,
+      total: 0,
+      pageIndex: 1,
+      pageSize: 10
     }
   },
   watch: {
@@ -44,29 +44,31 @@ export default {
       this.keyword = e
     },
     async initializeTable() {
-      let result = await getStuList(this.pageIndex,this.pageSize)
+      let result = await getStuList(this.pageIndex, this.pageSize)
       this.tableData = result.data.tableData
-      this.total=result.data.total
+      if (result.data.total) {
+        this.total = result.data.total
+      }
     },
-    goScore(row){
+    goScore(row) {
       this.$router.push({
-        path:"/student2/成绩列表",
-        query:{
-          name:row.name
+        path: "/student2/成绩列表",
+        query: {
+          name: row.name
         }
       })
     },
-    async getPageInfo(pageIndex,pageSize){
+    async getPageInfo(pageIndex, pageSize) {
       this.pageIndex = pageIndex
       this.pageSize = pageSize
       this.initializeTable()
-  }
+    }
   },
   mounted() {
     this.initializeTable()
-    setTimeout(()=>{
-      this.show=true
-    },400)
+    setTimeout(() => {
+      this.show = true
+    }, 400)
   }
 };
 </script>
@@ -76,6 +78,7 @@ export default {
   margin: 0 5px;
   height: 800px
 }
+
 .infinite-list-wrapper {
   height: calc(100vh - 200px);
 }
