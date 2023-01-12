@@ -22,7 +22,7 @@
         </el-table-column>
       </el-table>
     </el-card>
-    <Pagination v-show="show" ></Pagination>
+    <Pagination v-show="show" @getPageInfo="getPageInfo" :total="total"></Pagination>
   </div>
 </template>
 
@@ -34,7 +34,10 @@ export default {
     return {
       tableData: [],
       keyword: "",
-      show:false
+      show:false,
+      total:0,
+      pageIndex:1,
+      pageSize:10
     };
   },
   components: { Pagination },
@@ -82,9 +85,15 @@ export default {
     },
     //初始化表格
     async initializeTable() {
-      let result = await getStuList()
-      this.tableData = result.data
-    }
+      let result = await getStuList(this.pageIndex,this.pageSize)
+      this.tableData = result.data.tableData
+      this.total=result.data.total
+    },
+    async getPageInfo(pageIndex,pageSize){
+      this.pageIndex = pageIndex
+      this.pageSize = pageSize
+      this.initializeTable()
+  }
   },
   async mounted() {
     this.initializeTable()

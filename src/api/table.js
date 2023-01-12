@@ -8,10 +8,14 @@ import request from '@/utils/request'
 //   })
 // }
 //获取学生信息列表
-export function getStuList(){
+export function getStuList(pageIndex,pageSize){
   return request({
     url:"/vue3/getStuInfo",
     method: 'get',
+    params:{
+      pageIndex,
+      pageSize
+    }
   })
 }
 //添加学生列表或修改
