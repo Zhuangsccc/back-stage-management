@@ -84,7 +84,7 @@ export default {
             },
             title: "",
             total: 0,
-            pageIndex: 1,
+            pageIndex: 0,
             pageSize: 10,
             keyword:""
         }
@@ -151,7 +151,7 @@ export default {
                         });
                         this.dialogFormVisible = false
                         if (this.$route.query.name) {
-                            this.initTableDataByName(this.$route.query.name)
+                            this.initTableDataByName(this.$route.query.name,this.pageIndex, this.pageSize)
                         } else {
                             this.initTableData()
                         }
@@ -192,7 +192,7 @@ export default {
                         message: '删除成功!'
                     });
                     if (this.$route.query.name) {
-                        this.initTableDataByName(this.$route.query.name)
+                        this.initTableDataByName(this.$route.query.name,this.pageIndex, this.pageSize)
                     } else {
                         this.initTableData()
                     }

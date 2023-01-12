@@ -36,7 +36,7 @@ export default {
       keyword: "",
       show: false,
       total: 0,
-      pageIndex: 1,
+      pageIndex: 0,
       pageSize: 10
     };
   },
