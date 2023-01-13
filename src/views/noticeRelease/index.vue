@@ -65,7 +65,6 @@
             >管理员</el-descriptions-item
           >
         </el-descriptions>
-        
       </el-card>
     </div>
   </div>

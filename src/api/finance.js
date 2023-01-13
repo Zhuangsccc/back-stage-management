@@ -22,7 +22,14 @@ export function getApprovalList(pageIndex,pageSize){
 //新增财务信息
 export function addNewFinance(data){
     return request({
-        url:"/finance/addNewFinance",
+        url:"/finance/addFinance",
+        method:"post",
+        data,
+    })
+}
+export function updateFinace(data){
+    return request({
+        url:"/finance/updateFinance",
         method:"post",
         data,
     })

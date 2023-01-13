@@ -29,7 +29,7 @@
       </el-card>
       <Pagination v-show="show" @getPageInfo="getPageInfo" :total="total"></Pagination>
     </div>
-    <dia :diaForm="diaForm" @changeDia="changeDia" :title="title"></dia>
+    <dia :diaForm="diaForm" @changeDia="changeDia" @update="initTableData" :title="title"></dia>
   </div>
 </template>
 
@@ -77,7 +77,7 @@ export default {
     },
     changeDia(e){
       this.diaForm = e
-    }
+    },
   },
   mounted() {
     this.initTableData()

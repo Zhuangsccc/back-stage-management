@@ -2,7 +2,7 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" src="@/assets/Ptu/logo.png" class="sidebar-logo">
+        <img  src="@/assets/Ptu/logo.png" class="sidebar-logo">
       </router-link>
     </transition>
   </div>
@@ -44,7 +44,7 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 200px;
+      width: 180px;
       height:100%;
       vertical-align: middle;
       margin-right: 12px;
