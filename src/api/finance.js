@@ -34,3 +34,12 @@ export function updateFinace(data){
         data,
     })
 }
+export function deleteFinance(id){
+    return request({
+        url:"/finance/deleteFinance",
+        method:"delete",
+        data:{
+            id
+        }
+    })
+}

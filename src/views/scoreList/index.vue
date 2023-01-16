@@ -11,7 +11,7 @@
                 </el-table-column>
                 <el-table-column prop="subject" label="科目" align="center">
                 </el-table-column>
-                <el-table-column prop="score" label="分数" align="center">
+                <el-table-column prop="score" label="分数" align="center" sortable>
                 </el-table-column>
                 <el-table-column prop="type" label="类型" align="center">
                 </el-table-column>

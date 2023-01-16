@@ -98,11 +98,11 @@ export default {
             let result = await updateFinace(data)
             if (result.code == 200) {
                 this.$message({
-                    message:state=="1"?'通过成功':'已驳回',
+                    message: state == "1" ? '通过成功' : '已驳回',
                     type: 'success'
                 });
                 this.initTableData()
-            }else{
+            } else {
                 this.$message.error(result.msg);
             }
         }

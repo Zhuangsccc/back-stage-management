@@ -33,7 +33,7 @@ export default {
 .sidebar-logo-container {
   position: relative;
   width: 100%;
-  height: 50px;
+  height: 70px;
   line-height: 50px;
   background: #404b69;
   text-align: center;
