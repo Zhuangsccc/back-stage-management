@@ -20,9 +20,8 @@
             </template>
           </el-table-column>
           <el-table-column label="审批人" prop="approver" align="center"> </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" align="center">
             <template slot-scope="{ row }">
-              <el-link type="primary" :underline="false">编辑</el-link>
               <el-link type="danger" :underline="false" style="margin-left: 10px" @click="goDelete(row)" >删除</el-link>
             </template>
           </el-table-column>

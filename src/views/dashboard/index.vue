@@ -56,18 +56,14 @@ export default {
   methods: {
     setSize: function () {
       // 通过浏览器宽度(图片宽度)计算高度
-
       this.bannerHeight = (400 / 1920) * this.screenWidth;
     },
   },
   mounted() {
     // 首次加载时,需要调用一次
     this.screenWidth = window.innerWidth;
-
     this.setSize();
-
     // 窗口大小发生改变时,调用一次
-
     window.onresize = () => {
       this.screenWidth = window.innerWidth;
       this.setSize();

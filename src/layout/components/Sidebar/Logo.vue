@@ -41,7 +41,7 @@ export default {
 
   & .sidebar-logo-link {
     height: 100%;
-    width: 100%;
+    width: 180px;
 
     & .sidebar-logo {
       width: 180px;
@@ -50,16 +50,7 @@ export default {
       margin-right: 12px;
     }
 
-    & .sidebar-title {
-      display: inline-block;
-      margin: 0;
-      color: #fff;
-      font-weight: 600;
-      line-height: 50px;
-      font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-      vertical-align: middle;
-    }
+   
   }
 
   &.collapse {
