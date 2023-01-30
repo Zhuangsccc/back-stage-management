@@ -19,7 +19,6 @@
               :type="passwordType" placeholder="Password" name="password" tabindex="2" auto-complete="on"
               @keyup.enter.native="handleLogin" @focus="showIcon = 1" @blur="showIcon = 0"><i v-show="showIcon"
                 slot="suffix" class="el-icon-view" @click="showPwd"></i></el-input>
-            <!-- el-icon-view -->
           </el-form-item>
           <el-button :loading="loading" type="primary" style="width: 100%"
             @click.native.prevent="handleLogin">登录</el-button>
@@ -44,16 +43,14 @@
             <el-input prefix-icon="el-icon-lock" :key="passwordType" ref="password" v-model="registerForm.password"
               :type="passwordType" placeholder="请输入密码" name="password" tabindex="2" auto-complete="on"
               @keyup.enter.native="handleLogin" @focus="showIcon = 1" @blur="showIcon = 0"></el-input>
-            <!-- el-icon-view -->
           </el-form-item>
           <el-form-item style="margin-bottom: 5px">
             <el-input prefix-icon="el-icon-lock" :key="passwordType" v-model="secondPassword" :type="passwordType"
-              placeholder="请输入密码" name="password" tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin"
+              placeholder=" 请输入密码 " name=" password " tabindex="2" auto-complete="on" @keyup.enter.native="handleLogin"
               @focus="showIcon = 1" @blur="showIcon = 0"></el-input>
-            <span v-show="!isPass" class="register-tag" style="color: #c00000">两次输入的密码不一致</span>
-            <!-- el-icon-view -->
+            <span v-show="!isPass" class=" register-tag " style=" color: #c00000 ">两次输入的密码不一致</span>
           </el-form-item>
-          <el-button :loading="loading" type="primary" style="width: 100%"
+          <el-button :loading="loading" type=" primary " style=" width: 100% "
             @click.native.prevent="handleRegister">注册</el-button>
         </el-form>
       </div>
@@ -83,8 +80,8 @@ export default {
     };
     return {
       loginForm: {
-        username: "admin",
-        password: "123456",
+        username: "",
+        password: "",
       },
       registerForm: {
         username: "",

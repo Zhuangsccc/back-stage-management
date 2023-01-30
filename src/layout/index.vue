@@ -53,6 +53,7 @@ export default {
 <style lang="scss" scoped>
   @import "~@/styles/mixin.scss";
   @import "~@/styles/variables.scss";
+  
 
   .app-wrapper {
     @include clearfix;
@@ -64,6 +65,7 @@ export default {
       top: 0;
     }
   }
+  
   .drawer-bg {
     background: #000;
     opacity: 0.3;

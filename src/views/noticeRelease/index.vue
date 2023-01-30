@@ -5,7 +5,7 @@
        <el-button type="primary" size="mini" round class="header-button">发布留言</el-button>
        <el-button type="primary" size="mini" round class="header-button">选择时间</el-button>
        <el-button type="danger" size="mini" round class="header-button">批量删除</el-button> -->
-       <!-- 导航条 -->
+      <!-- 导航条 -->
       <el-menu
         :default-active="activeIndex"
         class="el-menu-demo"
@@ -14,9 +14,6 @@
         style="width: 100%"
       >
         <el-menu-item index="1" style="font-size: 30px">留言板</el-menu-item>
-        <el-menu-item index="2">发布留言</el-menu-item>
-        <el-menu-item index="3">管理操作</el-menu-item>
-        <el-menu-item index="4">选择时间</el-menu-item>
       </el-menu>
     </div>
     <!-- 主要区域 -->
@@ -28,112 +25,147 @@
         style="overflow: auto"
         infinite-scroll-distance="10"
       >
-      <!-- 留言条渲染区域 -->
-        <el-card
-          v-for="(i, index) in messageList"
-          :key="index"
-          class="infinite-list-item"
+        <!-- 留言条渲染区域 -->
+        <el-table
+          :data="
+            tableData.filter(
+              (data) =>
+                !keyword ||
+                data.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                data.subject.toLowerCase().includes(keyword.toLowerCase())
+            )
+          "
+          style="width: 100%"
         >
-          <i class="el-icon-user list-icon"
-            ><span class="list-username">{{ i.userName }}:</span
-            ><span class="list-message">{{ i.message }}</span></i
-          >
-          <div class="list-footer">
-            <div class="list-time">{{ i.time }}</div>
-            <div class="list-footer-right">
-              <el-link style="padding-top: 5px"
-                ><svg-icon @click="dianZan(index)" icon-class="点赞"  :class="!i.isGood?'svg':'active-svg'"
-              /></el-link>
-              <el-link style="margin-left: 10px;"><svg-icon icon-class="回复" class="svg" /></el-link>
-            </div>
-          </div>
-        </el-card>
+          <el-table-column prop="publisher" label="用户昵称" align="center">
+          </el-table-column>
+          <el-table-column prop="content" label="留言内容" align="center">
+          </el-table-column>
+          <el-table-column prop="release_time" label="留言时间" align="center">
+          </el-table-column>
+          <el-table-column prop="is_reply" label="是否回复" align="center">
+            <template slot-scope="{ row }">
+              <el-tag :type="row.is_reply == 1 ? `success` : `danger`">{{
+                row.is_reply == 1 ? "已回复" : "未回复"
+              }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="reply_content" label="回复内容" align="center">
+            <template slot-scope="{ row }">
+              <span v-show="!row.is_reply">暂未回复</span>
+              <span v-show="row.is_reply">{{ row.reply_content }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" align="center">
+            <template slot-scope="{ row }">
+              <el-tag :type="row.state == 1 ? `success` : `danger`">{{
+                row.state == 1 ? "正常" : "隐藏"
+              }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center">
+            <template slot-scope="{ row }">
+              <el-link type="primary" style="margin-right: 10px" size="small"
+              @click="toReply(row)"
+                >回复</el-link
+              >
+              <el-link
+                type="danger"
+                style="margin-right: 10px"
+                size="small"
+                @click="toDelete(row.id)"
+                >删除</el-link
+              >
+            </template>
+          </el-table-column>
+        </el-table>
       </el-card>
       <el-card class="main-right">
         <span class="main-right-header">留言板信息:</span>
-        <el-descriptions  :column="columnNumber" style="margin-top: 20px;" :labelStyle="labelStyle" :contentStyle="contentStyle"> 
-          <el-descriptions-item  label="留言总条数"
-            >{{messageList.length}}</el-descriptions-item
-          >
-          <el-descriptions-item label="最后留言时间"
-            >{{messageList[0].time}}</el-descriptions-item
-          >
-          <el-descriptions-item label="留言限制"
-            >自由发言</el-descriptions-item
-          >
-          <el-descriptions-item label="当前状态"
-            >管理员</el-descriptions-item
-          >
+        <el-descriptions
+          :column="columnNumber"
+          style="margin-top: 20px"
+          :labelStyle="labelStyle"
+          :contentStyle="contentStyle"
+        >
+          <el-descriptions-item label="留言总条数">{{
+            total
+          }}</el-descriptions-item>
+          <el-descriptions-item label="留言限制">自由发言</el-descriptions-item>
+          <el-descriptions-item label="当前状态">管理员</el-descriptions-item>
         </el-descriptions>
       </el-card>
+      <el-dialog
+        title="回复"
+        :visible.sync="dialogVisible"
+        width="30%"
+      >
+        <el-card class="message-card" style="overflow: auto"  shadow="hover">
+          <div style="padding-top: 10px">
+            <div class="message-content">{{item.content}}</div>
+            <div class="release-status">
+              <div class="publisher">{{item.publisher}}</div>
+              <div style="margin-left: 5px">发布于</div>
+              <div class="release-time">{{item.release_time}}</div>
+            </div>
+          </div>
+        </el-card>
+         <el-card class="input-content" shadow="hover">
+        <textarea
+          v-model="content"
+          class="my-input"
+          type="textarea"
+          placeholder="请输入回复"
+        ></textarea>
+      </el-card>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="okHandler"
+            >确 定</el-button
+          >
+        </span>
+      </el-dialog>
     </div>
+    <Pagination
+      v-show="show"
+      @getPageInfo="getPageInfo"
+      :total="total"
+    ></Pagination>
   </div>
 </template>
 
 <script>
+import Pagination from "@/components/Pagination";
+import { getMessageBoard, deleteMessageBoard ,updateMessageBoard } from "@/api/message";
+import { getMoment } from "@/utils";
 export default {
   name: "NoticeRelease",
+  components: { Pagination },
   data() {
     return {
+      content:"",
+      item:{},
+      dialogVisible:false,
+      show: false,
+      tableData: [],
+      total: 0,
+      pageIndex: 0,
+      pageSize: 10,
+      keyword: "",
       //激活索引
       activeIndex: "1",
       //判断是否点赞
-      isGood:false,
+      isGood: false,
       //描述列表一行展示多少数据
-      columnNumber:1,
+      columnNumber: 1,
       //描述列表标签样式
-      labelStyle:{
-        "font-size":"18px"
+      labelStyle: {
+        "font-size": "18px",
       },
       //描述列表内容样式
-      contentStyle:{
-        "font-size":"18px"
+      contentStyle: {
+        "font-size": "18px",
       },
-      //模拟留言数据列表
-      messageList: [
-        {
-          userName: "王晓波",
-          message: "大家好我是王晓波",
-          time: "2019-04-11 10:11",
-          isGood:false
-        },
-        {
-          userName: "张博凯",
-          message: "楼上是傻逼",
-          time: "2019-04-11 15:32",
-          isGood:false
-        },
-        {
-          userName: "邹龙健",
-          message: "楼上说得对",
-          time: "2019-04-11 19:21",
-          isGood:false
-        },
-        {
-          userName: "王晓波",
-          message: "大家好我是王晓波",
-          time: "2019-04-11 10:11",
-          isGood:false
-        },
-        {
-          userName: "王晓波",
-          message: "大家好我是王晓波",
-          time: "2019-04-11 10:11",
-          isGood:false
-        },
-        {
-          userName: "王晓波",
-          message: "大家好我是王晓波",
-          time: "2019-04-11 10:11",
-          isGood:false
-        },
-        {
-          userName: "王晓波",
-          message: "大家好我是王晓波",
-          time: "2019-04-11 10:11",
-          isGood:false
-        },
-      ],
     };
   },
   methods: {
@@ -142,13 +174,86 @@ export default {
       console.log(key, keyPath);
     },
     //滚动盒子触底触发操作
-    load() {
-      this.count += 2;
+    load() {},
+    async getPageInfo(pageIndex, pageSize) {
+      this.pageIndex = pageIndex;
+      this.pageSize = pageSize;
+      this.initTableData();
     },
-    //点赞操作
-    dianZan(index) {
-      this.messageList[index].isGood=!this.messageList[index].isGood
+    async initTableData() {
+      let result = await getMessageBoard(this.pageIndex, this.pageSize);
+      if (result.code == 200) {
+        this.tableData = result.data.tableData;
+        this.total = result.data.total;
+      }
     },
+    toDelete(id) {
+      this.$confirm("此操作将永久删除该条, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let result = await deleteMessageBoard(id);
+          const { code, msg } = result;
+          if (code == 200) {
+            this.$message({
+              type: "success",
+              message: result.msg,
+            });
+            this.initTableData();
+          } else {
+            this.$message.error(msg);
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    handleClose(){
+      this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+    },
+    toReply(row){
+      this.dialogVisible = true
+      this.item=row
+      this.content = ""
+    if(row.is_reply){
+      this.content = row.reply_content
+    }
+    },
+    async okHandler(){
+      const t = new Date();
+      let data = {
+        reply_content:this.content,
+        id:this.item.id,
+        reply_time:getMoment(t),
+        is_reply:this.content==""?0:1
+      }
+      let result = await updateMessageBoard(data)
+      if(result.code==200){
+        this.$message({
+          message:result.msg,
+          type:"success"
+        })
+        this.dialogVisible=false
+        this.initTableData()
+      }else{
+         this.$message.error(result.msg);
+      }
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.show = true;
+    }, 400);
+    this.initTableData();
   },
 };
 </script>
@@ -170,7 +275,7 @@ export default {
 }
 .infinite-list {
   height: calc(100vh - 120px);
-  width: 66%;
+  width: 90%;
 }
 .list-icon {
   font-size: 20px;
@@ -192,10 +297,10 @@ export default {
   height: 20px;
   width: 20px;
 }
-.active-svg{
+.active-svg {
   height: 20px;
   width: 20px;
-  color:red
+  color: red;
 }
 .list-footer {
   display: flex;
@@ -206,14 +311,27 @@ export default {
   margin-top: 10px;
 }
 .main-right {
-  width: 33%;
+  width: 20%;
   margin-left: 20px;
 }
 .main {
   display: flex;
 }
-.main-right-header{
+.main-right-header {
   font-size: 22px;
   font-weight: 550;
+}
+.release-status{
+  display: flex;
+}
+.input-content{
+  height: 200px;
+  margin-top: 5px;
+}
+.my-input{
+  height: 200px;
+  width: 100%;
+    border: 0px;
+  outline: none;
 }
 </style>
