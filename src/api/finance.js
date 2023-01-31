@@ -43,3 +43,21 @@ export function deleteFinance(id){
         }
     })
 }
+//获取财务收费
+export function getFinancialCharges(pageIndex,pageSize){
+    return request({
+        url:"/finance/getFinancialCharges",
+        method:"get",
+        params:{
+            pageIndex,
+            pageSize
+        }
+    })
+}
+export function addNewCharges(data){
+    return request ({
+        url:"/finance/addNewCharges",
+        method:"post",
+        data
+    })
+}

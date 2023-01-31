@@ -37,6 +37,8 @@
           "
           style="width: 100%"
         >
+        <el-table-column type="index" label="序号" align="center">
+          </el-table-column>
           <el-table-column prop="publisher" label="用户昵称" align="center">
           </el-table-column>
           <el-table-column prop="content" label="留言内容" align="center">
@@ -331,7 +333,7 @@ export default {
 .my-input{
   height: 200px;
   width: 100%;
-    border: 0px;
+  border: 0px;
   outline: none;
 }
 </style>
