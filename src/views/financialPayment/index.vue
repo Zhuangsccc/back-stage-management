@@ -105,7 +105,7 @@
 
 <script>
 import Pagination from "@/components/Pagination";
-import { getFinancialCharges,addNewCharges } from "@/api/finance";
+import { getFinancialCharges,addNewCharges,deleteCharges } from "@/api/finance";
 import {getMoment} from "@/utils/index"
 import {nanoid} from "nanoid"
 export default {
@@ -167,6 +167,7 @@ export default {
         this.form.creation_time = getMoment(new Date());
         this.form.id = id
         this.$refs.upload.submit();
+        this.initTableData()
     },
     addNew() {
       this.dialogFormVisible = true;
@@ -198,6 +199,33 @@ export default {
         }else{
           this.$message.error(result.msg);
         }
+      },
+      goDelete(row){
+        this.$confirm("此操作将永久删除该条, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let result = await deleteCharges(row.id);
+          const { code, msg } = result;
+          if (code == 200) {
+            this.$message({
+              type: "success",
+              message: result.msg,
+            });
+            this.initTableData();
+          } else {
+            this.$message.error(msg);
+            this.tableData=[]
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
       }
   },
   mounted() {

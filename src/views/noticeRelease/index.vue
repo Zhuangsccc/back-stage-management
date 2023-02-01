@@ -156,8 +156,6 @@ export default {
       keyword: "",
       //激活索引
       activeIndex: "1",
-      //判断是否点赞
-      isGood: false,
       //描述列表一行展示多少数据
       columnNumber: 1,
       //描述列表标签样式

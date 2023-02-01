@@ -61,3 +61,13 @@ export function addNewCharges(data){
         data
     })
 }
+//删除
+export function deleteCharges(id){
+    return request({
+        url:"/finance/deleteCharges",
+        method:"delete",
+        data:{
+            id
+        }
+    })
+}
