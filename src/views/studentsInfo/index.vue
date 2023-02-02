@@ -3,6 +3,7 @@
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="toAdd">新建</el-button>
+      <el-button  @click="reInit">刷新</el-button>
       <el-table class="el-table-style" :data="tableData.filter(data => !keyword || data.name.toLowerCase().includes(keyword.toLowerCase())
       || data.gender.toLowerCase().includes(keyword.toLowerCase())
       || data.major.toLowerCase().includes(keyword.toLowerCase()))" style="width: 100%">
@@ -89,12 +90,24 @@ export default {
         if (result.data.total) {
           this.total = result.data.total
         }
+        return new Promise((resolve, reject) => {
+          resolve(result.code)
+        })
       }
     },
     async getPageInfo(pageIndex, pageSize) {
       this.pageIndex = pageIndex
       this.pageSize = pageSize
       this.initializeTable()
+    },
+    async  reInit(){
+      const code = await this.initializeTable()
+      if(code==200){
+        this.$message({
+          message:'刷新成功！',
+          type:"success"
+        })
+      }
     }
   },
   async mounted() {

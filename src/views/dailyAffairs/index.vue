@@ -3,7 +3,7 @@
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="addNew">新建</el-button>
-      <el-button type="primary" @click="reInit">刷新</el-button>
+      <el-button  @click="reInit">刷新</el-button>
       <el-table
         class="el-table-style"
         :data="

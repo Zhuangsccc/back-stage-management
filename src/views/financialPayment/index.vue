@@ -4,6 +4,7 @@
       <FilterBar @getKeyWord="getKeyWord"></FilterBar>
       <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
         <el-button type="primary" @click="addNew">新建</el-button>
+        <el-button  @click="reInit">刷新</el-button>
         <el-table
           class="el-table-style"
           :data="
@@ -154,6 +155,9 @@ export default {
         if (result.data.total) {
           this.total = result.data.total;
         }
+        return new Promise((resolve, reject) => {
+          resolve(result.code)
+        })
       }
     },
     goDelete(row) {},
@@ -197,6 +201,15 @@ export default {
           this.$message.error(result.msg);
         }
       },
+      async  reInit(){
+      const code = await this.initTableData()
+      if(code==200){
+        this.$message({
+          message:'刷新成功！',
+          type:"success"
+        })
+      }
+    },
       goDelete(row){
         this.$confirm("此操作将永久删除该条, 是否继续?", "提示", {
         confirmButtonText: "确定",

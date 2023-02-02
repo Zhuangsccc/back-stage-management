@@ -3,6 +3,7 @@
     <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="addNewScore">新增成绩</el-button>
+      <el-button  @click="reInit">刷新列表</el-button>
       <el-table
         :data="
           tableData.filter(
@@ -147,6 +148,9 @@ export default {
         if (result.data.total) {
           this.total = result.data.total;
         }
+        return new Promise((resolve, reject) => {
+          resolve(result.code)
+        })
       }
     },
     async getPageInfo(pageIndex, pageSize) {
@@ -167,6 +171,9 @@ export default {
       if (result.code == 200) {
         this.tableData = result.data.tableData;
         this.total = result.data.total;
+        return new Promise((resolve, reject) => {
+          resolve(result.code)
+        })
       }
     },
     addNewScore() {
@@ -261,6 +268,24 @@ export default {
     getKeyWord(e) {
       this.keyword = e;
     },
+    async  reInit(){
+      let code
+      if (this.$route.query.name) {
+      code=await this.initTableDataByName(
+          this.$route.query.name,
+          this.pageIndex,
+          this.pageSize
+        );
+      } else {
+      code=await  this.initTableData();
+      }
+      if(code==200){
+        this.$message({
+          message:'刷新成功！',
+          type:"success"
+        })
+      }
+    }
   },
 };
 </script>

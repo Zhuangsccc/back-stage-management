@@ -4,6 +4,7 @@
       <FilterBar @getKeyWord="getKeyWord"></FilterBar>
       <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
         <el-button type="primary" @click="addFinance">新建</el-button>
+        <el-button  @click="reInit">刷新</el-button>
         <el-table class="el-table-style"
           :data="tableData.filter(data => !keyword || data.name.toLowerCase().includes(keyword.toLowerCase()))"
           style="width: 100%"
@@ -67,6 +68,9 @@ export default {
         if (result.data.total) {
           this.total = result.data.total
         }
+        return new Promise((resolve, reject) => {
+          resolve(result.code)
+        })
       }
     },
     addFinance(){
@@ -99,6 +103,15 @@ export default {
             message: '已取消删除'
           });          
         });
+    },
+    async  reInit(){
+      const code = await this.initTableData()
+      if(code==200){
+        this.$message({
+          message:'刷新成功！',
+          type:"success"
+        })
+      }
     }
   },
   mounted() {

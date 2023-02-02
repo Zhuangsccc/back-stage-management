@@ -91,6 +91,7 @@
           <el-descriptions-item label="留言限制">自由发言</el-descriptions-item>
           <el-descriptions-item label="当前状态">管理员</el-descriptions-item>
         </el-descriptions>
+        <el-button  type="primary" @click="reInit">刷新</el-button>
       </el-card>
       <el-dialog
         title="回复"
@@ -178,6 +179,9 @@ export default {
       if (result.code == 200) {
         this.tableData = result.data.tableData;
         this.total = result.data.total;
+        return new Promise((resolve) => {
+          resolve(result.code)
+        })
       }
     },
     toDelete(id) {
@@ -239,6 +243,15 @@ export default {
         this.initTableData()
       }else{
          this.$message.error(result.msg);
+      }
+    },
+    async  reInit(){
+      const code = await this.initTableData()
+      if(code==200){
+        this.$message({
+          message:'刷新成功！',
+          type:"success"
+        })
       }
     }
   },
