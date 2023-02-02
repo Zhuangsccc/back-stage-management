@@ -1,15 +1,16 @@
 <template>
   <div>
-    <FilterBar></FilterBar>
+    <FilterBar @getKeyWord="getKeyWord"></FilterBar>
     <el-card class="info-card infinite-list-wrapper" style="overflow: auto">
       <el-button type="primary" @click="addNew">新建</el-button>
+      <el-button type="primary" @click="reInit">刷新</el-button>
       <el-table
         class="el-table-style"
         :data="
           tableData.filter(
             (data) =>
               !keyword ||
-              data.name.toLowerCase().includes(keyword.toLowerCase())
+              data.event_name.toLowerCase().includes(keyword.toLowerCase())
           )
         "
         style="width: 100%"
@@ -53,7 +54,7 @@
               type="primary"
               :underline="false"
               style="margin-left: 10px"
-              @click="goDelete(row)"
+              @click="goEdit(row)"
               >编辑</el-link
             >
             <el-link
@@ -131,8 +132,8 @@
 </template>
 
 <script>
-import { getTodoList,addTodo } from "@/api/todo";
-import { judgeTime } from "@/utils/index";
+import { getTodoList,addTodo,deleteTodo } from "@/api/todo";
+import { deepClone, judgeTime } from "@/utils/index";
 export default {
   name: "DailyAffairs",
   data() {
@@ -193,19 +194,55 @@ export default {
       let result = await getTodoList(this.pageIndex, this.pageSize);
       if (result.code == 200) {
         this.tableData = result.data.tableData;
-        this.tableData.forEach((item) => {
+         this.tableData.forEach((item) => {
           item.onTime = judgeTime(item.start_time, item.end_time);
         });
-        console.log(this.tableData);
         if (result.data.total) {
           this.total = result.data.total;
         }
+        return new Promise((resolve, reject) => {
+          resolve(result.code)
+        })
       }
     },
-    goDelete(row) {},
+    goDelete(row) {
+      this.$confirm("此操作将永久删除该条, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let result = await deleteTodo(row.id);
+          const { code, msg } = result;
+          if (code == 200) {
+            this.$message({
+              type: "success",
+              message: result.msg,
+            });
+            this.initTableData();
+          } else {
+            this.$message.error(msg);
+            this.tableData=[]
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    goEdit(row){
+      this.form = deepClone(row)
+      this.time_range=[row.start_time,row.end_time]
+      this.dialogFormVisible=true
+    },
     okHandler() {
        this.$refs.myForm.validate(async (valid) => {
           if (valid) {  
+            if(this.form.onTime!==''){
+               delete this.form.onTime
+            }
             let result = await addTodo(this.form)
             if(result.code==200){
               this.$message({
@@ -213,6 +250,7 @@ export default {
                 type:"success"
               })
               this.dialogFormVisible=false
+              this.initTableData()
             }else{
               this.$message.error(result.msg)
               this.dialogFormVisible=false
@@ -238,6 +276,15 @@ export default {
         this.$refs.myForm.clearValidate()
       })
     },
+   async  reInit(){
+      const code = await this.initTableData()
+      if(code==200){
+        this.$message({
+          message:'刷新成功！',
+          type:"success"
+        })
+      }
+    }
   },
   watch: {
     time_range: {

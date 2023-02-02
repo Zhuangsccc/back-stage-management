@@ -159,7 +159,6 @@ export default {
     goDelete(row) {},
     okHandler() {
         let id = nanoid()
-        console.log(id);
         this.data.id=id
         this.data.type="财务收费"
         this.form.creation_time = getMoment(new Date());
