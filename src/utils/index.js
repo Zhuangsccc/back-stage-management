@@ -137,3 +137,13 @@ const moment = require("moment")
 export function getMoment(time){
   return moment(time).format('YYYY-MM-DD HH:mm:ss');
 }
+//判断当前时间是否在时间段内
+export function judgeTime(beginDateStr, endDateStr){
+              let curDate = new Date(),
+              beginDate = new Date(beginDateStr),
+              endDate = new Date(endDateStr);
+              if (curDate >= beginDate && curDate <= endDate) {
+                  return true;
+              }
+              return false;
+}
