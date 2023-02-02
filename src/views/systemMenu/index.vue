@@ -46,7 +46,6 @@
 
 <script>
 import { listRoutes, updateRoute, deleteRoute } from "@/api/menu"
-import FilterBar from "@/components/FilterBar"
 import routerDialog from "./components/routerDialog"
 import { filterType, getOuterMostNode, filterPath } from "@/utils/routeSet"
 import { deepClone } from "@/utils"
@@ -132,7 +131,7 @@ export default {
         });
     }
   },
-  components: { FilterBar, routerDialog },
+  components: {  routerDialog },
   async mounted() {
     await this.initTableData()
     console.log(this.tableData);

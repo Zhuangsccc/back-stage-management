@@ -28,7 +28,6 @@
 
 <script>
 import { getStuList, deleteStuInfo } from "@/api/table"
-import Pagination from "@/components/Pagination"
 export default {
   data() {
     return {
@@ -40,7 +39,6 @@ export default {
       pageSize: 10
     };
   },
-  components: { Pagination },
   methods: {
     //添加学生
     toAdd() {

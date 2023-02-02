@@ -14,8 +14,9 @@ import router from './router'
 import '@/icons'
 import '@/permission'
 import FilterBar from "@/components/FilterBar"
+import Pagination from "@/components/Pagination"
 Vue.component(FilterBar.name,FilterBar)
-
+Vue.component(Pagination.name,Pagination)
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()

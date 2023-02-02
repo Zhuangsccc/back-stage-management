@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import FilterBar from "@/components/FilterBar"
-import Pagination from "@/components/Pagination"
 import { getApprovalList, updateFinace } from "@/api/finance"
 import store from "@/store"
 export default {
@@ -65,7 +63,6 @@ export default {
             },
         }
     },
-    components: { FilterBar, Pagination },
     mounted() {
         this.initTableData()
         setTimeout(() => {

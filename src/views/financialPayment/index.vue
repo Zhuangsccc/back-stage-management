@@ -104,7 +104,6 @@
 </template>
 
 <script>
-import Pagination from "@/components/Pagination";
 import { getFinancialCharges,addNewCharges,deleteCharges } from "@/api/finance";
 import {getMoment} from "@/utils/index"
 import {nanoid} from "nanoid"
@@ -139,7 +138,6 @@ export default {
       data:{id:null,type:""},
     };
   },
-  components: { Pagination },
   methods: {
     getKeyWord(e) {
       this.keyword = e;

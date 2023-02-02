@@ -58,11 +58,9 @@
 </template>
 
 <script>
-import FilterBar from "@/components/FilterBar"
 import { getUserList, updatePassWord, deleteU,register,setUser} from "@/api/user"
 import { getMoment } from "@/utils"
 export default {
-  components: { FilterBar },
   data() {
     const validatePass = (rule, value, callback) => {
       if (value !== this.form.password) {

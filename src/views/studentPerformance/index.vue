@@ -21,12 +21,9 @@
 </template>
 
 <script>
-import FilterBar from "@/components/FilterBar"
 import { getStuList } from "@/api/table"
-import Pagination from "@/components/Pagination"
 export default {
   name: "StudentPerformance",
-  components: { FilterBar, Pagination },
   data() {
     return {
       keyword: "",

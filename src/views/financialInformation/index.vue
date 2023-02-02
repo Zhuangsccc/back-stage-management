@@ -34,13 +34,11 @@
 </template>
 
 <script>
-import FilterBar from "@/components/FilterBar"
-import Pagination from "@/components/Pagination"
 import { getList,deleteFinance } from "@/api/finance"
 import dia from "./dia.vue"
 export default {
   name: "FinancialInformation",
-  components: { FilterBar, Pagination, dia },
+  components: { dia },
   data() {
     return {
       keyword: "",

@@ -1,11 +1,6 @@
 <template>
   <div class="container">
     <div class="header">
-      <!-- <div class="header-name"><span>留言板:</span></div>
-       <el-button type="primary" size="mini" round class="header-button">发布留言</el-button>
-       <el-button type="primary" size="mini" round class="header-button">选择时间</el-button>
-       <el-button type="danger" size="mini" round class="header-button">批量删除</el-button> -->
-      <!-- 导航条 -->
       <el-menu
         :default-active="activeIndex"
         class="el-menu-demo"
@@ -137,12 +132,10 @@
 </template>
 
 <script>
-import Pagination from "@/components/Pagination";
 import { getMessageBoard, deleteMessageBoard ,updateMessageBoard } from "@/api/message";
 import { getMoment } from "@/utils";
 export default {
   name: "NoticeRelease",
-  components: { Pagination },
   data() {
     return {
       content:"",

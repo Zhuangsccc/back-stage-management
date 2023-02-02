@@ -98,8 +98,6 @@ import {
   updateScore,
   deleteScore,
 } from "@/api/score";
-import FilterBar from "@/components/FilterBar";
-import Pagination from "@/components/Pagination";
 export default {
   data() {
     return {
@@ -127,7 +125,6 @@ export default {
       keyword: "",
     };
   },
-  components: { FilterBar, Pagination },
   mounted() {
     if (this.$route.query.name) {
       this.initTableDataByName(
